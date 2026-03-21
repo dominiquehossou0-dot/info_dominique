@@ -10,7 +10,7 @@ body{
   height: 150px;
   border-radius: 50%;
   top: 120px;
-  right: 10px;
+  right: 25px;
   transform: translateY(-50%);
   object-fit: cover;
   background-attachment: fixed;
@@ -135,4 +135,22 @@ section{
   font-style: normal;
   font-weight: 100;
   font-size: 20px;
+}
+button{
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  margin-right: 10px;
+}
+button:hover {
+  opacity: 0.8;
+}
+form{
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+fieldset{
+  margin-bottom: 20px;
+  padding: 15px;
 }

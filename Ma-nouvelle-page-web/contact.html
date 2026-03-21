@@ -38,6 +38,43 @@
                 <p>M'envoyer <a href="mailto:dominiquehossou0@gmail.com"> un email</a></p>
             </div>
         </section>
+        <section>
+            <h2>Formulaire pour un rendez-vous</h2>
+            <form action="traitement.php" method="post">
+                <fieldset>
+                    <legend>INSCRIPTION</legend>
+                    <ul>
+                        <li><label for="NOM">Nom : </label><input type="text" id="NOM" name="nom" placeholder="ex:NOUMONHESIN"></li>
+                        <br>
+                        <li><label for="PRENOM">Prenom : </label><input type="text" id="PRENOM" name="prenom" required placeholder="ex:Maxime A. B."></li>
+                        <br>
+                        <li><label for="PROFESSION">Profession : </label><input type="text" id="PROFESSION" name="profession" required placeholder="ex:Formateur"></li>
+                        <br>
+                        <label>Email:</label><input  type="email" name="email" placeholder="ex:nom@gmail.com"><br>
+                        <br>
+                        <input type="datetime-local" required>
+                        <br>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>COORDONNEES</legend>
+                    <ul>
+                        <li><label for="ADRESSE">Adresse:</label><input type="text" name="adresse" required placeholder="Abomey Calavi"></li>
+                        <br>
+                        <li><label for="PAYS">Pays:</label><select name="pays"><option>Bénin</option><option>Japon</option><option>Canada</option><option>Sénégal</option><option>Côte d'Ivoire</option><option>France</option><option>Nigéria</option><option>Niger</option><option>Allemangne</option><option>Etat-Unis</option></select> </label></li>
+                        <br>
+                        <label>Sexe</label>
+                        <input type="radio" name="sexe" value="Homme" class="inline"> Homme
+                        <input type="radio" name="sexe" value="Femme" class="inline"> Femme
+                        <br>
+                        <br>
+                        <label>Langues :</label><label><input type="checkbox" name="langues []" value="fr"> Français</label><label><input type="checkbox" name="langues []" value="en"> Anglais</label><label><input type="checkbox" name="langues □" value="All"> Allemand</label><label><input type="checkbox" name="langues □" value="Ch"> Chinois</label>
+                    </ul>
+                </fieldset>
+                <br>
+                <button type="submit" class="btn">Envoyer</button>  <button type="reset" class="btn">Annuler</button>  <button type="button" onclick="window.location.href='index.html'">Retour</button>
+            </form>
+        </section>
     </article>
     <footer>
         <p>Copyright 2026 HOSSOU Dominique - Toute reproduction interdites</p>
