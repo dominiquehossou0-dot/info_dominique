@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en fr">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +13,10 @@
     <nav>
         <div class="table">
             <ul>
-                <li class="menu.index">
-                    <a href="index.html">Acceuil</a>
+                <li class="menu-index">
+                    <a href="index.html">Accueil</a>
                 </li>
-                <li class="menu.exp">
+                <li class="menu-exp">
                     <a href="experinces-pro.html">Expériences professionnelles</a>
                 </li>
                 <li class="menu-hob">
@@ -52,7 +52,7 @@
                         <br>
                         <label>Email:</label><input  type="email" name="email" placeholder="ex:nom@gmail.com"><br>
                         <br>
-                        <input type="datetime-local" required>
+                        <input type="datetime-local" name="date_rdv" required>
                         <br>
                     </ul>
                 </fieldset>
@@ -61,14 +61,14 @@
                     <ul>
                         <li><label for="ADRESSE">Adresse:</label><input type="text" name="adresse" required placeholder="Abomey Calavi"></li>
                         <br>
-                        <li><label for="PAYS">Pays:</label><select name="pays"><option>Bénin</option><option>Japon</option><option>Canada</option><option>Sénégal</option><option>Côte d'Ivoire</option><option>France</option><option>Nigéria</option><option>Niger</option><option>Allemangne</option><option>Etat-Unis</option></select> </label></li>
+                        <li><label for="PAYS">Pays:<select name="pays"><option>Bénin</option><option>Japon</option><option>Canada</option><option>Sénégal</option><option>Côte d'Ivoire</option><option>France</option><option>Nigéria</option><option>Niger</option><option>Allemagne</option><option>États-Unis</option></select></label></li>
                         <br>
                         <label>Sexe</label>
                         <input type="radio" name="sexe" value="Homme" class="inline"> Homme
                         <input type="radio" name="sexe" value="Femme" class="inline"> Femme
                         <br>
                         <br>
-                        <label>Langues :</label><label><input type="checkbox" name="langues []" value="fr"> Français</label><label><input type="checkbox" name="langues []" value="en"> Anglais</label><label><input type="checkbox" name="langues □" value="All"> Allemand</label><label><input type="checkbox" name="langues □" value="Ch"> Chinois</label>
+                        <label>Langues :</label><label><input type="checkbox" name="langues[]" value="fr"> Français</label><label><input type="checkbox" name="langues[]" value="en"> Anglais</label><label><input type="checkbox" name="langues□" value="All"> Allemand</label><label><input type="checkbox" name="langues□" value="Ch"> Chinois</label>
                     </ul>
                 </fieldset>
                 <br>

@@ -12,18 +12,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     echo "<h2>Données reçues :</h2>";
 
-    echo "Nom : $nom <br>";
-    echo "Prénom : $prenom <br>";
-    echo "Profession : $profession <br>";
-    echo "Email : $email <br>";
-    echo "Date : $date <br>";
-    echo "Adresse : $adresse <br>";
-    echo "Pays : $pays <br>";
-    echo "Sexe : $sexe <br>";
+    echo "Nom : " .htmlspecialchars($nom) . "<br>";
+    echo "Prénom : " .htmlspecialchars($prenom) . "<br>";
+    echo "Profession : " .htmlspecialchars($profession) . <br>";
+    echo "Email : " .htmlspecialchars($email) . "<br>";
+    echo "Date : " .htmlspecialchars($date) . "<br>";
+    echo "Adresse : " .htmlspecialchars($adresse) . "<br>";
+    echo "Pays : " .htmlspecialchars($pays) . "<br>";
+    echo "Sexe : " .htmlspecialchars($sexe) . "<br>";
 
     echo "Langues :";
-    if (!empty($_POST['langues'])) {
-        foreach ($_POST['langues'] as $langue)
+    if (!empty($langues)) {
+        foreach ($langues as $langue)
         {
             echo $langue . " ";
         }
@@ -31,6 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Aucune langue sélectionnée";
     }
 } else {
-    echo " X Accès non autorisé";
+    echo "  Accès non autorisé";
 }
 ?>
