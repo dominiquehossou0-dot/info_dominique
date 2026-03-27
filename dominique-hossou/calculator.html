@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Calculateurs Hydrologiques — INE/UAC</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230a1f3c'/><text y='.9em' font-size='72' x='10'>🧮</text></svg>"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="style-calculator.css" />
+
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← Hydrologie</a>
+  <div class="nav-brand">Calcul<span>Hydro</span></div>
+  <div class="nav-pills">
+    <a href="#c1">Rationnel</a><a href="#c2">Gumbel</a><a href="#c3">Normale</a>
+    <a href="#c4">Thornthwaite</a><a href="#c5">Statistiques</a><a href="#c6">Mayer</a>
+    <a href="#c7">Régression</a><a href="#c8">CDC</a><a href="#c9">SPI</a>
+    <a href="#c10">Manning</a><a href="#c11">Gravelius</a><a href="#c12">Pearson III</a>
+  </div>
+  <a href="profil.html" style="color:var(--brown);font-size:.75rem;font-weight:700;text-decoration:none;font-family:'Segoe UI',Arial,sans-serif;border:1.5px solid var(--brown3);padding:.3rem .8rem;border-radius:5px;white-space:nowrap;border-bottom:2px solid var(--gold);">👤 Profil</a>
+  <a href="BiblioHydro.html" style="color:var(--brown);font-size:.75rem;font-weight:700;text-decoration:none;font-family:'Segoe UI',Arial,sans-serif;border:1.5px solid var(--brown3);padding:.3rem .8rem;border-radius:5px;white-space:nowrap;border-bottom:2px solid var(--gold);">📚 Bibliothèque</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🧮 12 Calculateurs · Graphiques · PDF · PNG · INE–UAC</div>
+    <h1>Calculateurs <span>Hydrologiques</span></h1>
+    <p>12 outils de calcul avec tracé de graphiques, téléchargement des résultats en PDF et des graphiques en PNG.</p>
+    <div class="hero-chips">
+      <span class="hc">Méthode Rationnelle</span><span class="hc">Gumbel</span>
+      <span class="hc">Loi Normale/Log-Normale</span><span class="hc">Thornthwaite</span>
+      <span class="hc">Mayer</span><span class="hc">Régression</span><span class="hc">CDC</span>
+      <span class="hc">SPI</span><span class="hc">Manning-Strickler</span><span class="hc">Gravelius</span>
+      <span class="hc">Pearson III</span><span class="hc">Statistiques</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="ccard open" id="c1">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci1">🌊</div>
+    <div class="cht">
+      <div class="cnum">01</div>
+      <div class="ctitle">Débit de Pointe — Méthode Rationnelle</div>
+      <div class="cform">Q = C · i · A / 3,6</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Coefficient de ruissellement C <span>(0–1)</span></label>
+          <input class="if" id="r_C" type="number" min="0.01" max="1" step="0.01" placeholder="ex : 0.65"/>
+          <div class="ih">Forêt:0,10–0,20 · Prairie:0,20–0,40 · Urbain:0,50–0,70 · Béton:0,85–0,95</div></div>
+        <div class="ig"><label class="il">Intensité pluviale i <span>(mm/h)</span></label>
+          <input class="if" id="r_i" type="number" min="0.1" step="0.1" placeholder="ex : 55"/>
+          <div class="ih">Lire sur la courbe IDF pour la durée tc et la période de retour T choisie</div></div>
+        <div class="ig"><label class="il">Superficie du bassin A <span>(km²)</span></label>
+          <input class="if" id="r_A" type="number" min="0.001" step="0.001" placeholder="ex : 2.5"/>
+          <div class="ih">Valable pour A &lt; 5 km². Pour A &gt; 5 km², utiliser HEC-HMS.</div></div>
+        <div class="ig"><label class="il">Durée de pluie tc <span>(h) — pour hydrogramme</span></label>
+          <input class="if" id="r_tc" type="number" min="0.1" step="0.1" placeholder="ex : 1.0"/></div>
+        <button class="bcalc" onclick="calcRationnel()">⚡ Calculer &amp; Tracer</button>
+        <button class="breset" onclick="rstRationnel()">↺ Réinitialiser</button>
+        <div class="rperr" id="r_err"></div>
+        <div class="chelp"><strong>Rappel :</strong> La méthode rationnelle suppose une pluie d'intensité constante sur toute la durée tc (temps de concentration). Elle s'applique aux petits bassins urbains et ruraux.</div>
+      </div>
+      <div>
+        <div class="rpanel" id="r_res">
+          <div class="rptitle">📊 Résultats</div>
+          <div class="rpmain" id="r_Qp">—</div>
+          <div class="rpunit">m³/s — Débit de pointe</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">C</span><span class="rpval" id="r_dC">—</span></div>
+            <div class="rpitem"><span class="rplbl">i (mm/h)</span><span class="rpval" id="r_di">—</span></div>
+            <div class="rpitem"><span class="rplbl">A (km²)</span><span class="rpval" id="r_dA">—</span></div>
+            <div class="rpitem"><span class="rplbl">Q = C·i·A/3,6</span><span class="rpval" id="r_dcalc">—</span></div>
+          </div>
+          <div class="rpinterp" id="r_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('r_res','Méthode Rationnelle')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_r','hydrogramme_rationnel')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_r">
+          <div class="chart-title">Hydrogramme de crue simplifié</div>
+          <canvas id="chart_r" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c2">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci2">📈</div>
+    <div class="cht">
+      <div class="cnum">02</div>
+      <div class="ctitle">Ajustement Loi de Gumbel &amp; Périodes de Retour</div>
+      <div class="cform">X(T) = u + α·[−ln(−ln(1−1/T))]</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série de données <span>(virgules ou espaces)</span></label>
+          <textarea class="if" id="g_data" placeholder="ex : 78,95,112,68,134,89,103,145,72,98,128,87,115"></textarea></div>
+        <button class="bcalc" onclick="calcGumbel()">📈 Ajuster &amp; Tracer</button>
+        <button class="breset" onclick="rstG()">↺ Réinitialiser</button>
+        <div class="rperr" id="g_err"></div>
+        <div class="chelp"><strong>Méthode des moments :</strong> α = s·√6/π &nbsp;|&nbsp; u = x̄ − 0,5772·α<br/>Le test KS au seuil 5% valide l'ajustement.</div>
+      </div>
+      <div>
+        <div class="rpanel" id="g_res">
+          <div class="rptitle">📊 Paramètres Gumbel</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">n</span><span class="rpval" id="g_n">—</span></div>
+            <div class="rpitem"><span class="rplbl">x̄</span><span class="rpval" id="g_mean">—</span></div>
+            <div class="rpitem"><span class="rplbl">s</span><span class="rpval" id="g_std">—</span></div>
+            <div class="rpitem"><span class="rplbl">u (position)</span><span class="rpval" id="g_u">—</span></div>
+            <div class="rpitem"><span class="rplbl">α (échelle)</span><span class="rpval" id="g_alpha">—</span></div>
+            <div class="rpitem"><span class="rplbl">Test KS</span><span class="rpval" id="g_ks">—</span></div>
+          </div>
+          <table class="rptable" style="margin-top:.8rem">
+            <thead><tr><th>T (ans)</th><th>y(T)</th><th>X(T)</th></tr></thead>
+            <tbody id="g_tbody"></tbody>
+          </table>
+          <div class="rpinterp" id="g_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('g_res','Gumbel')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_g','droite_gumbel')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_g">
+          <div class="chart-title">Droite de Gumbel (papier Gumbel)</div>
+          <canvas id="chart_g" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c3">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci3">🔔</div>
+    <div class="cht">
+      <div class="cnum">03</div>
+      <div class="ctitle">Loi Normale &amp; Log-Normale</div>
+      <div class="cform">f(x) = (1/σ√2π)·exp[−(x−μ)²/2σ²]</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série de données <span>(virgules ou espaces)</span></label>
+          <textarea class="if" id="n_data" placeholder="ex : 1082,956,1134,1045,1201,978,1056,1189,932,1078"></textarea></div>
+        <div class="ig"><label class="il">Loi à ajuster</label>
+          <select class="if" id="n_law">
+            <option value="normal">Loi Normale</option>
+            <option value="lognormal">Loi Log-Normale</option>
+          </select></div>
+        <button class="bcalc" onclick="calcNormale()">🔔 Ajuster &amp; Tracer</button>
+        <button class="breset" onclick="rstN()">↺ Réinitialiser</button>
+        <div class="rperr" id="n_err"></div>
+        <div class="chelp"><strong>Loi Log-Normale :</strong> on applique la loi normale au logarithme des données. Utile pour les débits à distribution asymétrique positive (Cs &gt; 0).</div>
+      </div>
+      <div>
+        <div class="rpanel" id="n_res">
+          <div class="rptitle">📊 Paramètres</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Loi</span><span class="rpval" id="n_lawname">—</span></div>
+            <div class="rpitem"><span class="rplbl">μ (moyenne)</span><span class="rpval" id="n_mu">—</span></div>
+            <div class="rpitem"><span class="rplbl">σ (écart-type)</span><span class="rpval" id="n_sigma">—</span></div>
+            <div class="rpitem"><span class="rplbl">Test KS (Dn)</span><span class="rpval" id="n_ks">—</span></div>
+          </div>
+          <table class="rptable" style="margin-top:.8rem">
+            <thead><tr><th>T (ans)</th><th>z(T)</th><th>X(T)</th></tr></thead>
+            <tbody id="n_tbody"></tbody>
+          </table>
+          <div class="rpinterp" id="n_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('n_res','Loi Normale')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_n','histogramme_normale')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_n">
+          <div class="chart-title">Histogramme + courbe de densité</div>
+          <canvas id="chart_n" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c4">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci4">🌱</div>
+    <div class="cht">
+      <div class="cnum">04</div>
+      <div class="ctitle">Bilan Hydrologique — Méthode de Thornthwaite</div>
+      <div class="cform">ETP = 16·(10T/I)^a·(N/360)·(d/30)</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="ig"><label class="il">Latitude <span>(degrés, ex : 9.35 pour Parakou)</span></label>
+      <input class="if" id="th_lat" type="number" min="-90" max="90" step="0.01" placeholder="ex : 9.35" style="max-width:250px"/></div>
+    <p style="font-size:.78rem;color:var(--g500);margin-bottom:.8rem">T° moyennes mensuelles (°C) et précipitations (mm) :</p>
+    <div class="mgrid" id="th_inputs"></div>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+      <button class="bcalc" style="max-width:260px" onclick="calcTH()">🌱 Calculer &amp; Tracer</button>
+      <button class="breset" style="max-width:160px" onclick="rstTH()">↺ Réinitialiser</button>
+    </div>
+    <div class="rperr" id="th_err"></div>
+    <div class="rpanel" id="th_res" style="margin-top:1rem">
+      <div class="rptitle">📊 Bilan Annuel</div>
+      <div class="rpdet">
+        <div class="rpitem"><span class="rplbl">P totale</span><span class="rpval" id="th_P">—</span></div>
+        <div class="rpitem"><span class="rplbl">ETP annuelle</span><span class="rpval" id="th_ETP">—</span></div>
+        <div class="rpitem"><span class="rplbl">ETR annuelle</span><span class="rpval" id="th_ETR">—</span></div>
+        <div class="rpitem"><span class="rplbl">Déficit (ETP−ETR)</span><span class="rpval" id="th_def">—</span></div>
+        <div class="rpitem"><span class="rplbl">Excédent</span><span class="rpval" id="th_exc">—</span></div>
+        <div class="rpitem"><span class="rplbl">Indice I</span><span class="rpval" id="th_I">—</span></div>
+      </div>
+      <table class="rptable" style="margin-top:.8rem">
+        <thead><tr><th>Mois</th><th>T°C</th><th>P mm</th><th>ETP mm</th><th>ETR mm</th><th>Bilan</th></tr></thead>
+        <tbody id="th_tbody"></tbody>
+      </table>
+      <div class="rpinterp" id="th_interp"></div>
+      <div class="btn-dl-row">
+        <button class="bdl bdl-pdf" onclick="dlPDF('th_res','Thornthwaite')">📄 PDF</button>
+        <button class="bdl bdl-png" onclick="dlChart('chart_th','bilan_thornthwaite')">🖼 PNG</button>
+      </div>
+    </div>
+    <div class="chart-wrap" id="cw_th">
+      <div class="chart-title">Diagramme ombrothermique &amp; bilan hydrique</div>
+      <canvas id="chart_th" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c5">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci5">📊</div>
+    <div class="cht">
+      <div class="cnum">05</div>
+      <div class="ctitle">Paramètres Statistiques Complets</div>
+      <div class="cform">x̄, s, Cv, Me, Cs, Ck, Q1, Q3, Min, Max</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série de données <span>(virgules ou espaces)</span></label>
+          <textarea class="if" id="s_data" placeholder="ex : 1082,956,1134,1045,1201,978,1056,1189,932,1078,1156,1023"></textarea></div>
+        <div class="ig"><label class="il">Nom de la variable <span>(optionnel)</span></label>
+          <input class="if" id="s_name" type="text" placeholder="ex : Pluies annuelles Bohicon (mm)"/></div>
+        <button class="bcalc" onclick="calcStats()">📊 Calculer &amp; Tracer</button>
+        <button class="breset" onclick="rstS()">↺ Réinitialiser</button>
+        <div class="rperr" id="s_err"></div>
+        <div class="chelp"><strong>Cv &lt; 15%</strong> : série homogène · <strong>Cv 15–30%</strong> : variabilité modérée · <strong>Cv &gt; 30%</strong> : forte irrégularité interannuelle</div>
+      </div>
+      <div>
+        <div class="rpanel" id="s_res">
+          <div class="rptitle" id="s_title">📊 Statistiques descriptives</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">n</span><span class="rpval" id="s_n">—</span></div>
+            <div class="rpitem"><span class="rplbl">Moyenne x̄</span><span class="rpval" id="s_mean">—</span></div>
+            <div class="rpitem"><span class="rplbl">Médiane Me</span><span class="rpval" id="s_med">—</span></div>
+            <div class="rpitem"><span class="rplbl">Écart-type s</span><span class="rpval" id="s_std">—</span></div>
+            <div class="rpitem"><span class="rplbl">Cv (%)</span><span class="rpval" id="s_cv">—</span></div>
+            <div class="rpitem"><span class="rplbl">Asymétrie Cs</span><span class="rpval" id="s_cs">—</span></div>
+            <div class="rpitem"><span class="rplbl">Aplatissement Ck</span><span class="rpval" id="s_ck">—</span></div>
+            <div class="rpitem"><span class="rplbl">Min / Max</span><span class="rpval" id="s_mm">—</span></div>
+            <div class="rpitem"><span class="rplbl">Q1 / Q3</span><span class="rpval" id="s_qq">—</span></div>
+            <div class="rpitem"><span class="rplbl">IQR</span><span class="rpval" id="s_iqr">—</span></div>
+          </div>
+          <div class="rpinterp" id="s_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('s_res','Statistiques')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_s','boxplot_histogramme')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_s">
+          <div class="chart-title">Histogramme de fréquences</div>
+          <canvas id="chart_s" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c6">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci6">🔗</div>
+    <div class="cht">
+      <div class="cnum">06</div>
+      <div class="ctitle">Méthode de Mayer — Corrélation Pluie-Débit</div>
+      <div class="cform">Q = a·P + b &nbsp;|&nbsp; r = Cov(P,Q)/(σP·σQ)</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série X — Pluies P <span>(mm, une valeur par ligne ou virgules)</span></label>
+          <textarea class="if" id="m_X" placeholder="ex : 1082,956,1134,1045,1201,978,1056,1189,932,1078"></textarea></div>
+        <div class="ig"><label class="il">Série Y — Débits Q <span>(m³/s ou mm, même ordre)</span></label>
+          <textarea class="if" id="m_Y" placeholder="ex : 45.2,38.1,52.4,41.3,58.7,36.9,47.2,55.1,33.8,44.6"></textarea></div>
+        <div class="ig"><label class="il">Nom X <span>(optionnel)</span></label><input class="if" id="m_nx" type="text" placeholder="Pluies (mm)"/></div>
+        <div class="ig"><label class="il">Nom Y <span>(optionnel)</span></label><input class="if" id="m_ny" type="text" placeholder="Débits (m³/s)"/></div>
+        <button class="bcalc" onclick="calcMayer()">🔗 Calculer &amp; Tracer</button>
+        <button class="breset" onclick="rstM()">↺ Réinitialiser</button>
+        <div class="rperr" id="m_err"></div>
+        <div class="chelp"><strong>Méthode de Mayer :</strong> ajustement d'une droite de régression entre deux variables hydrologiques. Utilisée pour estimer les débits à partir des pluies à des stations sans jaugeage.</div>
+      </div>
+      <div>
+        <div class="rpanel" id="m_res">
+          <div class="rptitle">📊 Résultats Mayer</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Équation droite</span><span class="rpval" id="m_eq">—</span></div>
+            <div class="rpitem"><span class="rplbl">r (Pearson)</span><span class="rpval" id="m_r">—</span></div>
+            <div class="rpitem"><span class="rplbl">R² (détermination)</span><span class="rpval" id="m_r2">—</span></div>
+            <div class="rpitem"><span class="rplbl">a (pente)</span><span class="rpval" id="m_a">—</span></div>
+            <div class="rpitem"><span class="rplbl">b (ordonnée)</span><span class="rpval" id="m_b">—</span></div>
+            <div class="rpitem"><span class="rplbl">Erreur std résidus</span><span class="rpval" id="m_se">—</span></div>
+          </div>
+          <div class="rpinterp" id="m_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('m_res','Mayer')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_m','nuage_points_mayer')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_m">
+          <div class="chart-title">Nuage de points &amp; droite de régression (Mayer)</div>
+          <canvas id="chart_m" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c7">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci7">📉</div>
+    <div class="cht">
+      <div class="cnum">07</div>
+      <div class="ctitle">Régression Linéaire Simple + Prévision</div>
+      <div class="cform">Y = a·X + b &nbsp;|&nbsp; R² = 1 − SS_res/SS_tot</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série X <span>(variable indépendante)</span></label>
+          <textarea class="if" id="rl_X" placeholder="ex : 1,2,3,4,5,6,7,8,9,10"></textarea></div>
+        <div class="ig"><label class="il">Série Y <span>(variable dépendante)</span></label>
+          <textarea class="if" id="rl_Y" placeholder="ex : 2.1,3.9,6.2,7.8,9.5,11.1,13.2,15.1,17.0,19.1"></textarea></div>
+        <div class="ig"><label class="il">Valeur X à prédire <span>(optionnel)</span></label>
+          <input class="if" id="rl_xpred" type="number" step="any" placeholder="ex : 12"/></div>
+        <button class="bcalc" onclick="calcRL()">📉 Calculer &amp; Tracer</button>
+        <button class="breset" onclick="rstRL()">↺ Réinitialiser</button>
+        <div class="rperr" id="rl_err"></div>
+      </div>
+      <div>
+        <div class="rpanel" id="rl_res">
+          <div class="rptitle">📊 Régression Linéaire</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Équation</span><span class="rpval" id="rl_eq">—</span></div>
+            <div class="rpitem"><span class="rplbl">R² (déterm.)</span><span class="rpval" id="rl_r2">—</span></div>
+            <div class="rpitem"><span class="rplbl">r (Pearson)</span><span class="rpval" id="rl_r">—</span></div>
+            <div class="rpitem"><span class="rplbl">Pente a</span><span class="rpval" id="rl_a">—</span></div>
+            <div class="rpitem"><span class="rplbl">Ordonnée b</span><span class="rpval" id="rl_b">—</span></div>
+            <div class="rpitem"><span class="rplbl">Y prédit</span><span class="rpval" id="rl_yp">—</span></div>
+          </div>
+          <div class="rpinterp" id="rl_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('rl_res','Régression')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_rl','regression_lineaire')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_rl">
+          <div class="chart-title">Nuage de points &amp; droite de régression</div>
+          <canvas id="chart_rl" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c8">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci8">📊</div>
+    <div class="cht">
+      <div class="cnum">08</div>
+      <div class="ctitle">Courbe des Débits Classés (CDC)</div>
+      <div class="cform">F(Q) = rang/n · 100% — débits classés par ordre décroissant</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série de débits journaliers ou mensuels <span>(m³/s)</span></label>
+          <textarea class="if" id="cdc_data" placeholder="ex : 45,38,52,41,58,36,47,55,33,44,62,29,50,39,48,71,25,43,37,60"></textarea></div>
+        <button class="bcalc" onclick="calcCDC()">📊 Tracer la CDC</button>
+        <button class="breset" onclick="rstCDC()">↺ Réinitialiser</button>
+        <div class="rperr" id="cdc_err"></div>
+        <div class="chelp"><strong>Lecture CDC :</strong> Q50% = débit médian (dépassé 50% du temps). Q90% = débit d'étiage. Q10% = débit de forte hydraulicité. La surface sous la courbe = lame d'eau moyenne.</div>
+      </div>
+      <div>
+        <div class="rpanel" id="cdc_res">
+          <div class="rptitle">📊 Caractéristiques du régime</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Qmax</span><span class="rpval" id="cdc_max">—</span></div>
+            <div class="rpitem"><span class="rplbl">Q10% (haute eau)</span><span class="rpval" id="cdc_q10">—</span></div>
+            <div class="rpitem"><span class="rplbl">Q50% (médian)</span><span class="rpval" id="cdc_q50">—</span></div>
+            <div class="rpitem"><span class="rplbl">Q90% (étiage)</span><span class="rpval" id="cdc_q90">—</span></div>
+            <div class="rpitem"><span class="rplbl">Qmoy (module)</span><span class="rpval" id="cdc_moy">—</span></div>
+            <div class="rpitem"><span class="rplbl">Qmin</span><span class="rpval" id="cdc_min">—</span></div>
+            <div class="rpitem"><span class="rplbl">Irrégularité (Qmax/Qmin)</span><span class="rpval" id="cdc_irr">—</span></div>
+          </div>
+          <div class="rpinterp" id="cdc_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('cdc_res','CDC')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_cdc','courbe_debits_classes')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_cdc">
+          <div class="chart-title">Courbe des débits classés</div>
+          <canvas id="chart_cdc" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c9">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci9">🏜️</div>
+    <div class="cht">
+      <div class="cnum">09</div>
+      <div class="ctitle">Analyse des Sécheresses — SPI (Standardized Precipitation Index)</div>
+      <div class="cform">SPI = (P − μ) / σ</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série de précipitations annuelles <span>(mm)</span></label>
+          <textarea class="if" id="spi_data" placeholder="ex : 1082,956,1134,1045,1201,978,1056,1189,932,1078,1156,1023,1098,945,1167,1034"></textarea></div>
+        <button class="bcalc" onclick="calcSPI()">🏜️ Calculer &amp; Tracer</button>
+        <button class="breset" onclick="rstSPI()">↺ Réinitialiser</button>
+        <div class="rperr" id="spi_err"></div>
+        <div class="chelp">
+          <strong>Interprétation SPI :</strong><br/>
+          SPI &gt; 2 : extrêmement humide · 1 à 2 : très humide · 0 à 1 : modérément humide<br/>
+          0 à -1 : légèrement sec · -1 à -2 : modérément sec · &lt; -2 : extrêmement sec
+        </div>
+      </div>
+      <div>
+        <div class="rpanel" id="spi_res">
+          <div class="rptitle">📊 Analyse SPI</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Années analysées</span><span class="rpval" id="spi_n">—</span></div>
+            <div class="rpitem"><span class="rplbl">Années sèches (SPI&lt;-1)</span><span class="rpval" id="spi_dry">—</span></div>
+            <div class="rpitem"><span class="rplbl">Années humides (SPI&gt;1)</span><span class="rpval" id="spi_wet">—</span></div>
+            <div class="rpitem"><span class="rplbl">SPI min (plus sèche)</span><span class="rpval" id="spi_min">—</span></div>
+            <div class="rpitem"><span class="rplbl">SPI max (plus humide)</span><span class="rpval" id="spi_max">—</span></div>
+          </div>
+          <div class="rpinterp" id="spi_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('spi_res','SPI')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_spi','indice_spi')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_spi">
+          <div class="chart-title">Indice de Sécheresse SPI par année</div>
+          <canvas id="chart_spi" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c10">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci10">🏗️</div>
+    <div class="cht">
+      <div class="cnum">10</div>
+      <div class="ctitle">Formule de Manning-Strickler — Écoulement en canal</div>
+      <div class="cform">Q = K · A · R^(2/3) · I^(1/2)</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Coefficient de Strickler K <span>(m^(1/3)/s)</span></label>
+          <input class="if" id="ms_K" type="number" min="1" max="120" step="1" placeholder="ex : 35"/>
+          <div class="ih">Béton lisse:75–90 · Maçonnerie:50–60 · Terre compactée:25–40 · Rivière naturelle:20–35</div></div>
+        <div class="ig"><label class="il">Forme de la section</label>
+          <select class="if" id="ms_shape" onchange="updateMSfields()">
+            <option value="rect">Rectangulaire</option>
+            <option value="trap">Trapézoïdale</option>
+            <option value="circ">Circulaire</option>
+          </select></div>
+        <div id="ms_fields"></div>
+        <div class="ig"><label class="il">Pente hydraulique I <span>(m/m, sans dimension)</span></label>
+          <input class="if" id="ms_I" type="number" min="0.00001" step="0.0001" placeholder="ex : 0.002"/>
+          <div class="ih">Exemple : pente 2‰ = 0,002 · pente 5‰ = 0,005</div></div>
+        <button class="bcalc" onclick="calcMS()">🏗️ Calculer le débit</button>
+        <button class="breset" onclick="rstMS()">↺ Réinitialiser</button>
+        <div class="rperr" id="ms_err"></div>
+        <div class="chelp"><strong>R = rayon hydraulique</strong> = A/P_mouillé. La vitesse V = K·R^(2/3)·I^(1/2). Valable pour l'écoulement uniforme turbulent en section constante.</div>
+      </div>
+      <div>
+        <div class="rpanel" id="ms_res">
+          <div class="rptitle">📊 Résultats Hydrauliques</div>
+          <div class="rpmain" id="ms_Q">—</div>
+          <div class="rpunit">m³/s — Débit</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Section mouillée A (m²)</span><span class="rpval" id="ms_A">—</span></div>
+            <div class="rpitem"><span class="rplbl">Périmètre mouillé Pm (m)</span><span class="rpval" id="ms_Pm">—</span></div>
+            <div class="rpitem"><span class="rplbl">Rayon hydraulique R (m)</span><span class="rpval" id="ms_R">—</span></div>
+            <div class="rpitem"><span class="rplbl">Vitesse V (m/s)</span><span class="rpval" id="ms_V">—</span></div>
+            <div class="rpitem"><span class="rplbl">Nombre de Froude Fr</span><span class="rpval" id="ms_Fr">—</span></div>
+          </div>
+          <div class="rpinterp" id="ms_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('ms_res','Manning-Strickler')">📄 PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c11">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci11">🗺️</div>
+    <div class="cht">
+      <div class="cnum">11</div>
+      <div class="ctitle">Indice de Gravelius &amp; Morphométrie</div>
+      <div class="cform">Kc = 0,28 × P / √A</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Superficie A <span>(km²)</span></label><input class="if" id="gr_A" type="number" min="0.01" step="0.01" placeholder="ex : 1250"/></div>
+        <div class="ig"><label class="il">Périmètre P <span>(km)</span></label><input class="if" id="gr_P" type="number" min="0.1" step="0.1" placeholder="ex : 185"/></div>
+        <div class="ig"><label class="il">Altitude max Zmax <span>(m)</span></label><input class="if" id="gr_Zmax" type="number" min="0" step="1" placeholder="ex : 450"/></div>
+        <div class="ig"><label class="il">Altitude min Zmin <span>(m)</span></label><input class="if" id="gr_Zmin" type="number" min="0" step="1" placeholder="ex : 35"/></div>
+        <div class="ig"><label class="il">Longueur totale cours d'eau ΣL <span>(km)</span></label><input class="if" id="gr_L" type="number" min="0.1" step="0.1" placeholder="ex : 890"/></div>
+        <button class="bcalc" onclick="calcGravelius()">🗺️ Calculer</button>
+        <button class="breset" onclick="rstGR()">↺ Réinitialiser</button>
+        <div class="rperr" id="gr_err"></div>
+        <div class="chelp">Kc=1 (circulaire) → crues rapides · Kc&gt;1,5 (allongé) → crues lentes</div>
+      </div>
+      <div>
+        <div class="rpanel" id="gr_res">
+          <div class="rptitle">📊 Paramètres Morphométriques</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">Kc (Gravelius)</span><span class="rpval" id="gr_Kc">—</span></div>
+            <div class="rpitem"><span class="rplbl">L rectangle (km)</span><span class="rpval" id="gr_Lr">—</span></div>
+            <div class="rpitem"><span class="rplbl">l rectangle (km)</span><span class="rpval" id="gr_lr">—</span></div>
+            <div class="rpitem"><span class="rplbl">Dénivelée ΔZ (m)</span><span class="rpval" id="gr_dZ">—</span></div>
+            <div class="rpitem"><span class="rplbl">Pente Ig (m/km)</span><span class="rpval" id="gr_Ig">—</span></div>
+            <div class="rpitem"><span class="rplbl">Densité drainage Dd</span><span class="rpval" id="gr_Dd">—</span></div>
+          </div>
+          <div class="rpinterp" id="gr_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('gr_res','Gravelius')">📄 PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ccard" id="c12">
+  <div class="cheader" onclick="tog(this)">
+    <div class="cicon ci12">📐</div>
+    <div class="cht">
+      <div class="cnum">12</div>
+      <div class="ctitle">Loi de Pearson III — Analyse Fréquentielle</div>
+      <div class="cform">X(T) = x̄ + K(T,Cs) · s</div>
+    </div>
+    <div class="ctoggle">▼</div>
+  </div>
+  <div class="cbody">
+    <div class="cgrid">
+      <div>
+        <div class="ig"><label class="il">Série de données <span>(virgules ou espaces)</span></label>
+          <textarea class="if" id="p3_data" placeholder="ex : 78,95,112,68,134,89,103,145,72,98,128,87,115,76,142"></textarea></div>
+        <button class="bcalc" onclick="calcPearson3()">📐 Calculer &amp; Tracer</button>
+        <button class="breset" onclick="rstP3()">↺ Réinitialiser</button>
+        <div class="rperr" id="p3_err"></div>
+        <div class="chelp"><strong>Pearson III</strong> (gamma décalée) : très flexible, recommandée pour les débits asymétriques. Les facteurs K(T,Cs) sont déterminés par tables ou par approximation de Wilson-Hilferty.</div>
+      </div>
+      <div>
+        <div class="rpanel" id="p3_res">
+          <div class="rptitle">📊 Paramètres Pearson III</div>
+          <div class="rpdet">
+            <div class="rpitem"><span class="rplbl">x̄ (moyenne)</span><span class="rpval" id="p3_mean">—</span></div>
+            <div class="rpitem"><span class="rplbl">s (écart-type)</span><span class="rpval" id="p3_std">—</span></div>
+            <div class="rpitem"><span class="rplbl">Cs (asymétrie)</span><span class="rpval" id="p3_cs">—</span></div>
+          </div>
+          <table class="rptable" style="margin-top:.8rem">
+            <thead><tr><th>T (ans)</th><th>K(T,Cs)</th><th>X(T)</th></tr></thead>
+            <tbody id="p3_tbody"></tbody>
+          </table>
+          <div class="rpinterp" id="p3_interp"></div>
+          <div class="btn-dl-row">
+            <button class="bdl bdl-pdf" onclick="dlPDF('p3_res','Pearson III')">📄 PDF</button>
+            <button class="bdl bdl-png" onclick="dlChart('chart_p3','pearson3')">🖼 PNG</button>
+          </div>
+        </div>
+        <div class="chart-wrap" id="cw_p3">
+          <div class="chart-title">Courbe des fréquences cumulées (F empirique vs Pearson III)</div>
+          <canvas id="chart_p3" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <p>Calculateurs Hydrologiques · <a href="index.html">Page Hydrologie</a> · <a href="profil.html">Mon Profil</a> · INE–UAC · Licence · Bénin</p>
+  <p style="margin-top:.4rem;font-size:.68rem;opacity:.6">Outils pédagogiques — Toujours vérifier les résultats avec les méthodes de référence.</p>
+</footer>
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const $=id=>document.getElementById(id);
+const R=(v,d=3)=>isNaN(v)?'—':Math.round(v*10**d)/10**d;
+const MOIS=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const JOURS=[31,28,31,30,31,30,31,31,30,31,30,31];
+const chartInstances={};
+
+const whiteBgPlugin = {
+  id: 'whiteBg',
+  beforeDraw(chart) {
+    const { ctx, chartArea } = chart;
+    ctx.save();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+Chart.register(whiteBgPlugin);
+
+
+function tog(h){h.parentElement.classList.toggle('open');}
+function parseD(s){return s.split(/[\s,;|\n]+/).map(Number).filter(v=>!isNaN(v)&&String(v).trim()!=='');}
+function err(id,msg){const e=$(id);e.textContent='⚠️ '+msg;e.classList.add('show');}
+function clrErr(id){$(id).classList.remove('show');}
+function showR(id){$(id).classList.add('show');}
+function showC(id){
+   const wrap = $(id);
+  if(!wrap) return;
+  wrap.classList.add('show');
+  setTimeout(()=>{
+    const canvasId = wrap.querySelector('canvas')?.id;
+    if(canvasId && chartInstances[canvasId]){
+      chartInstances[canvasId].resize();
+      chartInstances[canvasId].update();
+    }
+  }, 60);
+}
+
+window.addEventListener('scroll',()=>{
+  $('btt').classList.toggle('visible',window.scrollY>300);
+});
+
+function mkChart(canvasId,config){
+  if(chartInstances[canvasId]){chartInstances[canvasId].destroy();
+    delete chartInstances[canvasld];
+  }
+  const canvas = $(canvasId);
+  if(!canvas) return;
+
+  const wrap = canvas.closest('.chart-wrap');
+  if(wrap) wrap.classList.add('show');
+
+  if(!config.options) config.options = {};
+  config.options.responsive = true;
+  config.options.maintainAspectRatio = false;
+  if(!config.options.animation) config.options.animation = {duration: 600};
+
+  const ctx = canvas.getContext('2d');
+  chartInstances[canvasId] = new Chart(ctx, config);
+
+  setTimeout(()=>{
+    if(chartInstances[canvasId]){
+      chartInstances[canvasId].resize();
+    }
+  }, 80);
+}
+
+async function dlPDF(panelId, titre) {
+  let jsPDFClass;
+  if (window.jspdf && window.jspdf.jsPDF) {
+    jsPDFClass = window.jspdf.jsPDF;
+  } else if (window.jsPDF) {
+    jsPDFClass = window.jsPDF;
+  } else {
+    alert('Erreur : la librairie jsPDF n\'est pas chargée. Vérifiez votre connexion internet.');
+    return;
+  }
+
+  const doc = new jsPDFClass({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const panel = $(panelId);
+  if (!panel) { alert('Panneau de résultats introuvable.'); return; }
+
+  const rows = panel.querySelectorAll('.rpitem');
+  const tbody = panel.querySelector('tbody');
+  let y = 20;
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(15);
+  doc.setTextColor(10, 31, 60);
+  doc.text('Resultats — ' + titre, 15, y); y += 8;
+
+  doc.setFontSize(9);
+  doc.setTextColor(100, 116, 139);
+  doc.text('INE-UAC · Hydrologie Quantitative · Licence S3A54', 15, y); y += 4;
+  doc.text('Date : ' + new Date().toLocaleDateString('fr-FR'), 15, y); y += 5;
+
+  doc.setDrawColor(21, 101, 192);
+  doc.setLineWidth(0.5);
+  doc.line(15, y, 195, y); y += 7;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(51, 65, 85);
+
+  const mainEl = panel.querySelector('.rpmain');
+  const unitEl = panel.querySelector('.rpunit');
+  if (mainEl && mainEl.textContent && mainEl.textContent !== '—') {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(21, 101, 192);
+    doc.text('Resultat principal : ' + mainEl.textContent, 15, y); y += 5;
+    if (unitEl) {
+      doc.setFontSize(9); doc.setTextColor(100, 116, 139);
+      doc.text(unitEl.textContent, 15, y); y += 5;
+    }
+    doc.setFontSize(10); doc.setTextColor(51, 65, 85);
+  }
+
+  rows.forEach(row => {
+    if (y > 272) { doc.addPage(); y = 20; }
+    const lbl = row.querySelector('.rplbl')?.textContent || '';
+    const val = row.querySelector('.rpval')?.textContent || '';
+    if (!lbl || !val || val === '—') return;
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(51, 65, 85);
+    doc.text(lbl + ' :', 15, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(10, 31, 60);
+    doc.text(String(val), 95, y);
+    y += 6;
+  });
+
+  if (tbody && tbody.querySelectorAll('tr').length > 0) {
+    if (y > 240) { doc.addPage(); y = 20; }
+    y += 5;
+    doc.setFillColor(21, 101, 192);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+
+    const hdrs = panel.querySelectorAll('thead th');
+    const hdrTxt = [...hdrs].map(h => h.textContent);
+    const colW = 175 / Math.max(hdrTxt.length, 1);
+    doc.rect(15, y - 4, 180, 7, 'F');
+    hdrTxt.forEach((h, i) => doc.text(h, 16 + i * colW, y));
+    y += 6;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(51, 65, 85);
+    tbody.querySelectorAll('tr').forEach((tr, idx) => {
+      if (y > 272) { doc.addPage(); y = 20; }
+      if (idx % 2 === 0) {
+        doc.setFillColor(241, 245, 249);
+        doc.rect(15, y - 4, 180, 6, 'F');
+      }
+      [...tr.querySelectorAll('td')].forEach((td, i) => {
+        doc.text(td.textContent, 16 + i * colW, y);
+      });
+      y += 6;
+    });
+  }
+
+  const interp = panel.querySelector('.rpinterp');
+  if (interp && interp.textContent && y < 265) {
+    y += 5;
+    doc.setDrawColor(0, 180, 216);
+    doc.setLineWidth(0.3);
+    doc.line(15, y, 195, y); y += 5;
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139);
+    const lines = doc.splitTextToSize('Interpretation : ' + interp.textContent.replace(/[^\x00-\x7F]/g, c => {
+      const map = { 'é':'e','è':'e','ê':'e','ë':'e','à':'a','â':'a','î':'i','ï':'i','ô':'o','ù':'u','û':'u','ü':'u','ç':'c','É':'E','È':'E','Ê':'E','À':'A','Â':'A','Î':'I','Ô':'O','Û':'U','Ç':'C' };
+      return map[c] || c;
+    }), 175);
+    doc.text(lines, 15, y);
+  }
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(180);
+    doc.text('Calcul Hydro · INE-UAC · Page ' + i + '/' + pageCount, 15, 290);
+    doc.text(new Date().toLocaleDateString('fr-FR'), 170, 290);
+  }
+
+  doc.save(titre.replace(/[\s\/&]/g, '_') + '_resultats.pdf');
+}
+
+function dlChart(canvasId, name) {
+  const canvas = $(canvasId);
+  if (!canvas) { alert('Graphique introuvable. Lancez d\'abord le calcul.'); return; }
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = canvas.width;
+  tmpCanvas.height = canvas.height;
+  const ctx = tmpCanvas.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
+
+  ctx.drawImage(canvas, 0, 0);
+
+  ctx.fillStyle = '#0a1f3c';
+  ctx.font = 'bold 14px Segoe UI, Arial, sans-serif';
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = '#64748b';
+  ctx.font = '11px Segoe UI, Arial, sans-serif';
+  ctx.fillText('INE–UAC · Hydrologie Quantitative · Licence S3A54 · ' + new Date().toLocaleDateString('fr-FR'),
+               tmpCanvas.width / 2, tmpCanvas.height - 6);
+
+  const link = document.createElement('a');
+  link.download = name + '.png';
+  link.href = tmpCanvas.toDataURL('image/png', 1.0);
+  link.click();
+}
+
+function calcRationnel(){
+  clrErr('r_err');
+  const C=parseFloat($('r_C').value),i=parseFloat($('r_i').value),
+        A=parseFloat($('r_A').value),tc=parseFloat($('r_tc').value)||1;
+  if([C,i,A].some(isNaN)||C<=0||C>1||i<=0||A<=0){err('r_err','Remplissez C (0–1), i > 0, A > 0.');return;}
+  const Q=R(C*i*A/3.6,3);
+  $('r_Qp').textContent=Q+' m³/s';
+  $('r_dC').textContent=C;$('r_di').textContent=i+' mm/h';
+  $('r_dA').textContent=A+' km²';$('r_dcalc').textContent=C+' × '+i+' × '+A+' / 3,6';
+  let msg=`Bassin de <strong>${A} km²</strong>, C=${C}, i=${i} mm/h → Q = <strong>${Q} m³/s</strong>.`;
+  if(Q<1)msg+=' Petit ouvrage de drainage léger.';
+  else if(Q<10)msg+=' Collecteur principal à dimensionner.';
+  else msg+=' Ouvrage hydraulique important nécessaire.';
+  $('r_interp').innerHTML=msg;showR('r_res');
+  const tm=tc*0.4,tb=tc*2.5;
+  const pts=[];
+  for(let t=0;t<=tb+0.5;t+=tb/30){
+    let q;
+    if(t<=tm)q=Q*t/tm;
+    else if(t<=tb)q=Q*(tb-t)/(tb-tm);
+    else q=0;
+    pts.push({x:R(t,2),y:R(Math.max(0,q),3)});
+  }
+  mkChart('chart_r',{type:'line',data:{datasets:[{label:'Q (m³/s)',data:pts,borderColor:'#1565c0',backgroundColor:'rgba(21,101,192,.12)',fill:true,tension:0.3,pointRadius:0}]},
+    options:{scales:{x:{type:'linear',title:{display:true,text:'Temps (h)'}},y:{title:{display:true,text:'Débit (m³/s)'}}},plugins:{legend:{display:false}}}});
+  showC('cw_r');
+}
+function rstRationnel(){['r_C','r_i','r_A','r_tc'].forEach(f=>$(f).value='');$('r_res').classList.remove('show');$('cw_r').classList.remove('show');clrErr('r_err');}
+
+function calcGumbel(){
+  clrErr('g_err');
+  const data=parseD($('g_data').value);
+  if(data.length<5){err('g_err','Minimum 5 valeurs requises.');return;}
+  const n=data.length,mean=data.reduce((a,b)=>a+b)/n;
+  const std=Math.sqrt(data.reduce((a,b)=>a+(b-mean)**2,0)/(n-1));
+  const alpha=std*Math.sqrt(6)/Math.PI,u=mean-0.5772*alpha;
+  const sorted=[...data].sort((a,b)=>a-b);
+  let Dn=0;
+  sorted.forEach((x,i)=>{const Fe=(i+1)/(n+1),Ft=Math.exp(-Math.exp(-(x-u)/alpha));Dn=Math.max(Dn,Math.abs(Fe-Ft));});
+  const Dcrit=R(1.36/Math.sqrt(n),4);
+  const ok=Dn<parseFloat(Dcrit);
+  $('g_n').textContent=n;$('g_mean').textContent=R(mean,2);$('g_std').textContent=R(std,2);
+  $('g_u').textContent=R(u,3);$('g_alpha').textContent=R(alpha,3);
+  $('g_ks').textContent=`Dn=${R(Dn,4)} ${ok?'< ✅':'> ❌'} Dcrit=${Dcrit}`;
+  const periods=[2,5,10,20,50,100,200,500,1000];
+  const tbody=$('g_tbody');tbody.innerHTML='';
+  periods.forEach(T=>{
+    const yT=-Math.log(-Math.log(1-1/T)),XT=R(u+alpha*yT,2);
+    tbody.innerHTML+=`<tr><td>${T}</td><td>${R(yT,3)}</td><td><strong>${XT}</strong></td></tr>`;
+  });
+  $('g_interp').innerHTML=ok?`✅ <strong>Loi de Gumbel acceptée</strong> (Dn=${R(Dn,4)} &lt; Dcrit=${Dcrit}).`:`⚠️ <strong>Gumbel non acceptable</strong> (Dn=${R(Dn,4)} &gt; Dcrit=${Dcrit}). Essayez Log-Normale ou Pearson III.`;
+  showR('g_res');
+  const yVals=sorted.map((_,i)=>-Math.log(-Math.log((i+1)/(n+1))));
+  const lineY=[-2,0,2,4,6,8];
+  mkChart('chart_g',{type:'scatter',data:{
+    datasets:[
+      {label:'Données observées',data:sorted.map((x,i)=>({x:yVals[i],y:x})),backgroundColor:'#1565c0',pointRadius:5},
+      {label:'Droite de Gumbel',data:lineY.map(y=>({x:y,y:u+alpha*y})),type:'line',borderColor:'#ef4444',borderDash:[6,3],pointRadius:0,tension:0}
+    ]},
+    options:{scales:{x:{title:{display:true,text:'Variable réduite y = -ln(-ln(F))'}},y:{title:{display:true,text:'X(T)'}}},plugins:{legend:{position:'bottom'}}}});
+  showC('cw_g');
+}
+function rstG(){$('g_data').value='';$('g_res').classList.remove('show');$('cw_g').classList.remove('show');clrErr('g_err');}
+
+function normCDF(z){
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const sign=z<0?-1:1;z=Math.abs(z)/Math.sqrt(2);
+  const t=1/(1+p*z);const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-z*z);
+  return 0.5*(1+sign*y);
+}
+function normINV(p){
+  if(p<=0)return -6;if(p>=1)return 6;
+  const a=[0,2.50662823884,-18.61500062529,41.39119773534,-25.44106049637];
+  const b=[0,-8.47351093090,23.08336743743,-21.06224101826,3.13082909833];
+  const c=[0,0.3374754822726147,0.9761690190917186,0.1607979714918209,0.0276438810333863,0.0038405729373609,0.0003951896511349,0.0000321767881768,0.0000002888167364,0.0000003960315187];
+  const y=p-0.5;let r;
+  if(Math.abs(y)<0.42){r=y*y;return y*(((a[4]*r+a[3])*r+a[2])*r+a[1])/(((b[4]*r+b[3])*r+b[2])*r+b[1]+1);}
+  r=p<0.5?Math.log(-Math.log(p)):Math.log(-Math.log(1-p));
+  r=c[0]+r*(c[1]+r*(c[2]+r*(c[3]+r*(c[4]+r*(c[5]+r*(c[6]+r*(c[7]+r*(c[8]+r*c[9]))))))));
+  return p<0.5?-r:r;
+}
+function calcNormale(){
+  clrErr('n_err');
+  const data=parseD($('n_data').value),law=$('n_law').value;
+  if(data.length<5){err('n_err','Minimum 5 valeurs.');return;}
+  const work=law==='lognormal'?data.map(x=>Math.log(x)):data;
+  const n=work.length,mu=work.reduce((a,b)=>a+b)/n;
+  const sigma=Math.sqrt(work.reduce((a,b)=>a+(b-mu)**2,0)/(n-1));
+  const sorted=[...data].sort((a,b)=>a-b);
+  const sortedW=law==='lognormal'?sorted.map(Math.log):sorted;
+  let Dn=0;
+  sortedW.forEach((x,i)=>{const Fe=(i+1)/(n+1),Ft=normCDF((x-mu)/sigma);Dn=Math.max(Dn,Math.abs(Fe-Ft));});
+  const Dcrit=R(1.36/Math.sqrt(n),4),ok=Dn<parseFloat(Dcrit);
+  $('n_lawname').textContent=law==='lognormal'?'Log-Normale':'Normale';
+  $('n_mu').textContent=R(mu,3);$('n_sigma').textContent=R(sigma,3);
+  $('n_ks').textContent=`Dn=${R(Dn,4)} ${ok?'< ✅':'> ❌'} Dcrit=${Dcrit}`;
+  const periods=[2,5,10,20,50,100],tbody=$('n_tbody');tbody.innerHTML='';
+  periods.forEach(T=>{
+    const z=normINV(1-1/T);
+    const XT=law==='lognormal'?R(Math.exp(mu+sigma*z),2):R(mu+sigma*z,2);
+    tbody.innerHTML+=`<tr><td>${T}</td><td>${R(z,3)}</td><td><strong>${XT}</strong></td></tr>`;
+  });
+  $('n_interp').innerHTML=ok?`✅ Loi ${law==='lognormal'?'Log-Normale':'Normale'} acceptée (Dn=${R(Dn,4)} &lt; Dcrit=${Dcrit}).`:`⚠️ Loi rejetée au seuil 5%.`;
+  showR('n_res');
+  const mn=Math.min(...data),mx=Math.max(...data),nbins=Math.ceil(Math.sqrt(n));
+  const bw=(mx-mn)/nbins;
+  const counts=Array(nbins).fill(0);
+  data.forEach(x=>{const b=Math.min(Math.floor((x-mn)/bw),nbins-1);counts[b]++;});
+  const labels=counts.map((_,i)=>R(mn+i*bw+bw/2,1));
+  const densX=Array.from({length:80},(_,i)=>mn+(mx-mn)*i/79);
+  const densY=densX.map(x=>{
+    const xw=law==='lognormal'&&x>0?Math.log(x):x;
+    const pd=(1/(sigma*Math.sqrt(2*Math.PI)))*Math.exp(-0.5*((xw-mu)/sigma)**2);
+    return law==='lognormal'&&x>0?pd/x:pd;
+  });
+  const maxCount=Math.max(...counts);const maxDens=Math.max(...densY);const scale=maxCount/maxDens;
+  mkChart('chart_n',{type:'bar',data:{
+    labels,
+    datasets:[
+      {label:'Fréquences',data:counts,backgroundColor:'rgba(21,101,192,.3)',borderColor:'#1565c0',borderWidth:1},
+      {label:'Densité théorique',data:densX.map((x,i)=>({x,y:densY[i]*scale})),type:'line',borderColor:'#ef4444',pointRadius:0,tension:0.4,borderWidth:2,yAxisID:'y'}
+    ]},
+    options:{scales:{x:{title:{display:true,text:'Valeur'}},y:{title:{display:true,text:'Effectif'}}},plugins:{legend:{position:'bottom'}}}});
+  showC('cw_n');
+}
+function rstN(){$('n_data').value='';$('n_res').classList.remove('show');$('cw_n').classList.remove('show');clrErr('n_err');}
+
+(function buildTHInputs(){
+  const c=$('th_inputs');
+  MOIS.forEach((m,i)=>{
+    c.innerHTML+=`<div class="mgi"><label>${m}</label>
+      <input class="if" id="tT${i}" type="number" step="0.1" placeholder="T°C" style="margin-bottom:.3rem"/>
+      <input class="if" id="tP${i}" type="number" step="0.1" min="0" placeholder="P mm"/></div>`;
+  });
+})();
+function photoper(lat,mi){
+  const phi=lat*Math.PI/180,decl=23.45*Math.sin(2*Math.PI*(284+mi*30.5)/365)*Math.PI/180;
+  const cosH=-Math.tan(phi)*Math.tan(decl);
+  if(cosH>=1)return 0;if(cosH<=-1)return 24;
+  return 2*Math.acos(cosH)*24/(2*Math.PI);
+}
+function calcTH(){
+  clrErr('th_err');
+  const lat=parseFloat($('th_lat').value);
+  if(isNaN(lat)||lat<-90||lat>90){err('th_err','Latitude invalide.');return;}
+  const T=[],P=[];
+  for(let i=0;i<12;i++){
+    const t=parseFloat($('tT'+i).value),p=parseFloat($('tP'+i).value);
+    if(isNaN(t)||isNaN(p)||p<0){err('th_err',`Données manquantes — ${MOIS[i]}.`);return;}
+    T.push(t);P.push(p);
+  }
+  const I=T.reduce((s,t)=>s+(t>0?Math.pow(t/5,1.514):0),0);
+  const a=6.75e-7*I**3-7.71e-5*I**2+1.792e-2*I+0.49239;
+  const RU_MAX=100;let RU=RU_MAX;
+  const res=[];let totP=0,totETP=0,totETR=0;
+  for(let i=0;i<12;i++){
+    const t=T[i],p=P[i],d=JOURS[i];
+    const N=photoper(lat,i);
+    const ETP_nc=t>0?16*Math.pow(10*t/I,a):0;
+    const ETP=Math.max(0,R(ETP_nc*(N/360)*(d/30),1));
+    let ETR;
+    if(p>=ETP){const exc=p-ETP;const fill=Math.min(exc,RU_MAX-RU);RU=Math.min(RU_MAX,RU+fill);ETR=ETP;}
+    else{const need=ETP-p;const drain=Math.min(RU,need);ETR=R(p+drain,1);RU=Math.max(0,RU-drain);}
+    ETR=Math.min(R(ETR,1),ETP);
+    totP+=p;totETP+=ETP;totETR+=ETR;
+    res.push({m:MOIS[i],T:t,P:p,ETP,ETR,bil:R(p-ETR,1)});
+  }
+  const def=R(totETP-totETR,1),exc=R(Math.max(0,totP-totETR),1);
+  $('th_P').textContent=R(totP,1)+' mm';$('th_ETP').textContent=R(totETP,1)+' mm';
+  $('th_ETR').textContent=R(totETR,1)+' mm';$('th_def').textContent=def+' mm';
+  $('th_exc').textContent=exc+' mm';$('th_I').textContent=R(I,2);
+  const tbody=$('th_tbody');tbody.innerHTML='';
+  res.forEach(r=>{
+    const c=r.bil>=0?'#86efac':'#fca5a5';
+    tbody.innerHTML+=`<tr><td>${r.m}</td><td>${r.T}</td><td>${r.P}</td><td>${r.ETP}</td><td>${r.ETR}</td><td style="color:${c};font-weight:700">${r.bil>=0?'+'+r.bil:r.bil}</td></tr>`;
+  });
+  const sec=res.filter(r=>r.P<r.ETP).length;
+  $('th_interp').innerHTML=`<strong>${sec} mois déficitaires</strong> / an. Déficit hydrique = <strong>${def} mm</strong>. ETR/ETP = <strong>${R(totETR/totETP*100,1)}%</strong>.`;
+  showR('th_res');
+  mkChart('chart_th',{type:'bar',data:{
+    labels:MOIS,
+    datasets:[
+      {label:'Précipitations P (mm)',data:res.map(r=>r.P),backgroundColor:'rgba(33,150,243,.45)',borderColor:'#2196f3',borderWidth:1,yAxisID:'y'},
+      {label:'ETP (mm)',data:res.map(r=>r.ETP),type:'line',borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.1)',fill:true,tension:0.4,pointRadius:3,yAxisID:'y'},
+      {label:'ETR (mm)',data:res.map(r=>r.ETR),type:'line',borderColor:'#22c55e',tension:0.4,pointRadius:3,borderDash:[5,3],yAxisID:'y'},
+      {label:'T°C',data:res.map(r=>r.T),type:'line',borderColor:'#f59e0b',tension:0.4,pointRadius:3,yAxisID:'y2'}
+    ]},
+    options:{scales:{y:{title:{display:true,text:'mm'}},y2:{position:'right',title:{display:true,text:'°C'},grid:{drawOnChartArea:false}}},plugins:{legend:{position:'bottom'}}}});
+  showC('cw_th');
+}
+function rstTH(){$('th_lat').value='';for(let i=0;i<12;i++){$('tT'+i).value='';$('tP'+i).value='';}$('th_res').classList.remove('show');$('cw_th').classList.remove('show');clrErr('th_err');}
+
+function calcStats(){
+  clrErr('s_err');
+  const data=parseD($('s_data').value);
+  if(data.length<2){err('s_err','Minimum 2 valeurs.');return;}
+  const n=data.length,mean=data.reduce((a,b)=>a+b)/n;
+  const sorted=[...data].sort((a,b)=>a-b);
+  const variance=data.reduce((a,b)=>a+(b-mean)**2,0)/(n-1);
+  const std=Math.sqrt(variance),cv=R(std/mean*100,2);
+  const cs=R(data.reduce((a,b)=>a+(b-mean)**3,0)/(n*std**3),3);
+  const ck=R(data.reduce((a,b)=>a+(b-mean)**4,0)/(n*std**4),3);
+  const med=n%2===0?(sorted[n/2-1]+sorted[n/2])/2:sorted[Math.floor(n/2)];
+  const q1=sorted[Math.floor(n*0.25)],q3=sorted[Math.floor(n*0.75)];
+  const name=$('s_name').value||'Série';
+  $('s_title').textContent='📊 '+name;
+  $('s_n').textContent=n;$('s_mean').textContent=R(mean,3);$('s_med').textContent=R(med,3);
+  $('s_std').textContent=R(std,3);$('s_cv').textContent=cv+'%';$('s_cs').textContent=cs;
+  $('s_ck').textContent=ck+(ck>3?' (leptokurtique)':ck<3?' (platokurtique)':' (normal)');
+  $('s_mm').textContent=R(sorted[0],2)+' / '+R(sorted[n-1],2);
+  $('s_qq').textContent=R(q1,2)+' / '+R(q3,2);$('s_iqr').textContent=R(q3-q1,2);
+  let msg=`<strong>${name}</strong> (n=${n}) : x̄=${R(mean,2)}, Cv=${cv}%`;
+  if(cv<15)msg+=' → série homogène.';else if(cv<30)msg+=' → variabilité modérée.';else msg+=' → forte irrégularité.';
+  $('s_interp').innerHTML=msg;showR('s_res');
+  const mn=sorted[0],mx=sorted[n-1],nb=Math.max(5,Math.ceil(Math.sqrt(n)));
+  const bw=(mx-mn)/nb;const counts=Array(nb).fill(0);
+  data.forEach(x=>{const b=Math.min(Math.floor((x-mn)/bw),nb-1);counts[b]++;});
+  mkChart('chart_s',{type:'bar',data:{
+    labels:counts.map((_,i)=>R(mn+i*bw+bw/2,1)),
+    datasets:[{label:'Effectif',data:counts,backgroundColor:'rgba(21,101,192,.4)',borderColor:'#1565c0',borderWidth:1}]},
+    options:{scales:{x:{title:{display:true,text:'Valeur'}},y:{title:{display:true,text:'Effectif'}}},plugins:{legend:{display:false}}}});
+  showC('cw_s');
+}
+function rstS(){$('s_data').value='';$('s_name').value='';$('s_res').classList.remove('show');$('cw_s').classList.remove('show');clrErr('s_err');}
+
+function linReg(X,Y){
+  const n=X.length,mx=X.reduce((a,b)=>a+b)/n,my=Y.reduce((a,b)=>a+b)/n;
+  const num=X.reduce((s,x,i)=>s+(x-mx)*(Y[i]-my),0);
+  const den=X.reduce((s,x)=>s+(x-mx)**2,0);
+  const a=num/den,b=my-a*mx;
+  const yhat=X.map(x=>a*x+b);
+  const sst=Y.reduce((s,y)=>s+(y-my)**2,0);
+  const sse=Y.reduce((s,y,i)=>s+(y-yhat[i])**2,0);
+  const r2=1-sse/sst,r=Math.sqrt(r2)*(a>=0?1:-1);
+  const se=Math.sqrt(sse/Math.max(n-2,1));
+  return{a,b,r,r2,se,yhat};
+}
+function calcMayer(){
+  clrErr('m_err');
+  const X=parseD($('m_X').value),Y=parseD($('m_Y').value);
+  if(X.length<3||X.length!==Y.length){err('m_err','X et Y doivent avoir le même nombre de valeurs (min 3).');return;}
+  const{a,b,r,r2,se}=linReg(X,Y);
+  const nx=$('m_nx').value||'X',ny=$('m_ny').value||'Y';
+  const eq=`${ny} = ${R(a,4)}·${nx} + ${R(b,3)}`;
+  $('m_eq').textContent=eq;$('m_r').textContent=R(r,4);$('m_r2').textContent=R(r2,4);
+  $('m_a').textContent=R(a,4);$('m_b').textContent=R(b,3);$('m_se').textContent=R(se,3);
+  let qual=Math.abs(r)>0.9?'très forte':Math.abs(r)>0.7?'forte':Math.abs(r)>0.5?'modérée':'faible';
+  $('m_interp').innerHTML=`Corrélation <strong>${qual}</strong> (r=${R(r,4)}, R²=${R(r2,4)}). ${R(r2*100,1)}% de la variance de ${ny} est expliquée par ${nx}.`;
+  showR('m_res');
+  const mn=Math.min(...X),mx=Math.max(...X);
+  const lineX=[mn,mx],lineY=[a*mn+b,a*mx+b];
+  mkChart('chart_m',{type:'scatter',data:{
+    datasets:[
+      {label:'Données',data:X.map((x,i)=>({x,y:Y[i]})),backgroundColor:'#1565c0',pointRadius:6},
+      {label:`${ny} = ${R(a,3)}·${nx} + ${R(b,2)} (R²=${R(r2,3)})`,data:lineX.map((x,i)=>({x,y:lineY[i]})),type:'line',borderColor:'#ef4444',borderDash:[6,3],pointRadius:0,tension:0}
+    ]},
+    options:{scales:{x:{title:{display:true,text:nx}},y:{title:{display:true,text:ny}}},plugins:{legend:{position:'bottom'}}}});
+  showC('cw_m');
+}
+function rstM(){['m_X','m_Y','m_nx','m_ny'].forEach(f=>$(f).value='');$('m_res').classList.remove('show');$('cw_m').classList.remove('show');clrErr('m_err');}
+
+function calcRL(){
+  clrErr('rl_err');
+  const X=parseD($('rl_X').value),Y=parseD($('rl_Y').value);
+  if(X.length<3||X.length!==Y.length){err('rl_err','X et Y doivent avoir le même nombre de valeurs (min 3).');return;}
+  const{a,b,r,r2}=linReg(X,Y);
+  const xp=parseFloat($('rl_xpred').value);
+  $('rl_eq').textContent=`Y = ${R(a,4)}·X + ${R(b,3)}`;
+  $('rl_r2').textContent=R(r2,4);$('rl_r').textContent=R(r,4);
+  $('rl_a').textContent=R(a,4);$('rl_b').textContent=R(b,3);
+  $('rl_yp').textContent=isNaN(xp)?'—':R(a*xp+b,3)+` (pour X=${xp})`;
+  $('rl_interp').innerHTML=`Droite : Y = ${R(a,3)}·X + ${R(b,2)}. R² = ${R(r2,3)} → le modèle explique ${R(r2*100,1)}% de la variance.`;
+  showR('rl_res');
+  const mn=Math.min(...X),mx=Math.max(...X);
+  const ptPred=!isNaN(xp)?[{x:xp,y:a*xp+b}]:[];
+  mkChart('chart_rl',{type:'scatter',data:{
+    datasets:[
+      {label:'Données',data:X.map((x,i)=>({x,y:Y[i]})),backgroundColor:'#1565c0',pointRadius:6},
+      {label:`Y=${R(a,3)}X+${R(b,2)} (R²=${R(r2,3)})`,data:[{x:mn,y:a*mn+b},{x:mx,y:a*mx+b}],type:'line',borderColor:'#ef4444',borderDash:[6,3],pointRadius:0},
+      ...(ptPred.length?[{label:'Prédiction',data:ptPred,backgroundColor:'#22c55e',pointRadius:10,pointStyle:'star'}]:[])
+    ]},
+    options:{scales:{x:{title:{display:true,text:'X'}},y:{title:{display:true,text:'Y'}}},plugins:{legend:{position:'bottom'}}}});
+  showC('cw_rl');
+}
+function rstRL(){['rl_X','rl_Y','rl_xpred'].forEach(f=>$(f).value='');$('rl_res').classList.remove('show');$('cw_rl').classList.remove('show');clrErr('rl_err');}
+
+function calcCDC(){
+  clrErr('cdc_err');
+  const data=parseD($('cdc_data').value);
+  if(data.length<5){err('cdc_err','Minimum 5 valeurs.');return;}
+  const sorted=[...data].sort((a,b)=>b-a);
+  const n=sorted.length,moy=R(data.reduce((a,b)=>a+b)/n,3);
+  const q10=sorted[Math.floor(n*0.10)],q50=sorted[Math.floor(n*0.50)],q90=sorted[Math.floor(n*0.90)];
+  $('cdc_max').textContent=R(sorted[0],3)+' m³/s';$('cdc_q10').textContent=R(q10,3)+' m³/s';
+  $('cdc_q50').textContent=R(q50,3)+' m³/s';$('cdc_q90').textContent=R(q90,3)+' m³/s';
+  $('cdc_moy').textContent=moy+' m³/s';$('cdc_min').textContent=R(sorted[n-1],3)+' m³/s';
+  const irr=sorted[n-1]>0?R(sorted[0]/sorted[n-1],1):'∞';
+  $('cdc_irr').textContent=irr;
+  $('cdc_interp').innerHTML=`Q50% = <strong>${R(q50,3)} m³/s</strong> (débit médian). Q90% = <strong>${R(q90,3)} m³/s</strong> (étiage caractéristique). Irrégularité = <strong>${irr}</strong>.`;
+  showR('cdc_res');
+  const pcts=sorted.map((_,i)=>(i/(n-1))*100);
+  mkChart('chart_cdc',{type:'line',data:{
+    datasets:[{label:'Q (m³/s)',data:pcts.map((p,i)=>({x:p,y:sorted[i]})),borderColor:'#1565c0',backgroundColor:'rgba(21,101,192,.1)',fill:true,tension:0.3,pointRadius:0}]},
+    options:{scales:{x:{type:'linear',min:0,max:100,title:{display:true,text:'Fréquence de dépassement (%)'}},y:{title:{display:true,text:'Débit (m³/s)'}}},plugins:{legend:{display:false}}}});
+  showC('cw_cdc');
+}
+function rstCDC(){$('cdc_data').value='';$('cdc_res').classList.remove('show');$('cw_cdc').classList.remove('show');clrErr('cdc_err');}
+
+function calcSPI(){
+  clrErr('spi_err');
+  const data=parseD($('spi_data').value);
+  if(data.length<5){err('spi_err','Minimum 5 valeurs.');return;}
+  const n=data.length,mu=data.reduce((a,b)=>a+b)/n;
+  const sigma=Math.sqrt(data.reduce((a,b)=>a+(b-mu)**2,0)/(n-1));
+  const spi=data.map(p=>R((p-mu)/sigma,3));
+  const dry=spi.filter(v=>v<-1).length,wet=spi.filter(v=>v>1).length;
+  $('spi_n').textContent=n;$('spi_dry').textContent=dry+' ans';$('spi_wet').textContent=wet+' ans';
+  $('spi_min').textContent=R(Math.min(...spi),3);$('spi_max').textContent=R(Math.max(...spi),3);
+  $('spi_interp').innerHTML=`<strong>${dry} années sèches</strong> (SPI &lt; -1) et <strong>${wet} années humides</strong> (SPI &gt; 1) sur ${n} ans. SPI moyen ≈ 0 par construction.`;
+  showR('spi_res');
+  const colors=spi.map(v=>v<-2?'#7f1d1d':v<-1?'#ef4444':v<0?'#fca5a5':v<1?'#bbf7d0':v<2?'#22c55e':'#14532d');
+  mkChart('chart_spi',{type:'bar',data:{
+    labels:spi.map((_,i)=>i+1),
+    datasets:[{label:'SPI',data:spi,backgroundColor:colors,borderColor:colors.map(c=>c),borderWidth:1}]},
+    options:{scales:{x:{title:{display:true,text:'Année (rang)'}},y:{title:{display:true,text:'SPI'},min:-3,max:3}},
+      plugins:{legend:{display:false},annotation:{annotations:{line1:{type:'line',yMin:-1,yMax:-1,borderColor:'#ef4444',borderDash:[4,4]},line2:{type:'line',yMin:1,yMax:1,borderColor:'#22c55e',borderDash:[4,4]}}}}}});
+  showC('cw_spi');
+}
+function rstSPI(){$('spi_data').value='';$('spi_res').classList.remove('show');$('cw_spi').classList.remove('show');clrErr('spi_err');}
+
+function updateMSfields(){
+  const s=$('ms_shape').value,c=$('ms_fields');
+  if(s==='rect'){
+    c.innerHTML=`<div class="ig"><label class="il">Largeur b <span>(m)</span></label><input class="if" id="ms_b" type="number" min="0.01" step="0.01" placeholder="ex : 3.0"/></div>
+    <div class="ig"><label class="il">Hauteur d'eau h <span>(m)</span></label><input class="if" id="ms_h" type="number" min="0.01" step="0.01" placeholder="ex : 1.2"/></div>`;
+  }else if(s==='trap'){
+    c.innerHTML=`<div class="ig"><label class="il">Largeur au fond b <span>(m)</span></label><input class="if" id="ms_b" type="number" min="0.01" step="0.01" placeholder="ex : 2.0"/></div>
+    <div class="ig"><label class="il">Hauteur d'eau h <span>(m)</span></label><input class="if" id="ms_h" type="number" min="0.01" step="0.01" placeholder="ex : 1.0"/></div>
+    <div class="ig"><label class="il">Fruit m <span>(h/v, talus)</span></label><input class="if" id="ms_m" type="number" min="0" step="0.1" placeholder="ex : 1.5"/></div>`;
+  }else{
+    c.innerHTML=`<div class="ig"><label class="il">Diamètre D <span>(m)</span></label><input class="if" id="ms_D" type="number" min="0.01" step="0.01" placeholder="ex : 0.8"/></div>
+    <div class="ig"><label class="il">Hauteur d'eau h <span>(m, h≤D)</span></label><input class="if" id="ms_h" type="number" min="0.01" step="0.01" placeholder="ex : 0.6"/></div>`;
+  }
+}
+updateMSfields();
+function calcMS(){
+  clrErr('ms_err');
+  const K=parseFloat($('ms_K').value),I=parseFloat($('ms_I').value);
+  const shape=$('ms_shape').value;
+  if(isNaN(K)||isNaN(I)||K<=0||I<=0){err('ms_err','Remplissez K > 0 et I > 0.');return;}
+  let A,Pm,h;
+  if(shape==='rect'){
+    const b=parseFloat($('ms_b').value);h=parseFloat($('ms_h').value);
+    if(isNaN(b)||isNaN(h)||b<=0||h<=0){err('ms_err','b et h invalides.');return;}
+    A=b*h;Pm=b+2*h;
+  }else if(shape==='trap'){
+    const b=parseFloat($('ms_b').value),m=parseFloat($('ms_m').value)||0;h=parseFloat($('ms_h').value);
+    if(isNaN(b)||isNaN(h)||b<=0||h<=0){err('ms_err','Paramètres invalides.');return;}
+    A=(b+m*h)*h;Pm=b+2*h*Math.sqrt(1+m**2);
+  }else{
+    const D=parseFloat($('ms_D').value);h=parseFloat($('ms_h').value);
+    if(isNaN(D)||isNaN(h)||D<=0||h<=0||h>D){err('ms_err','D et h invalides (h ≤ D).');return;}
+    const theta=2*Math.acos((D/2-h)/(D/2));
+    A=(D**2/8)*(theta-Math.sin(theta));Pm=(D/2)*theta;
+  }
+  const Rh=A/Pm,V=K*Math.pow(Rh,2/3)*Math.sqrt(I),Q=R(A*V,3);
+  $('ms_Q').textContent=Q+' m³/s';
+  $('ms_A').textContent=R(A,3)+' m²';$('ms_Pm').textContent=R(Pm,3)+' m';
+  $('ms_R').textContent=R(Rh,3)+' m';$('ms_V').textContent=R(V,3)+' m/s';
+  const Fr=R(V/Math.sqrt(9.81*(A/parseFloat($('ms_b')?.value||$('ms_D')?.value||1))),3);
+  $('ms_Fr').textContent=Fr+' ('+(Fr<1?'fluvial':Fr>1?'torrentiel':'critique')+')';
+  $('ms_interp').innerHTML=`Section ${shape} : A=${R(A,3)} m², V=<strong>${R(V,3)} m/s</strong>, Q=<strong>${Q} m³/s</strong>. Écoulement ${parseFloat(Fr)<1?'<strong>fluvial</strong> (Fr&lt;1)':'<strong>torrentiel</strong> (Fr&gt;1)'}.`;
+  showR('ms_res');
+}
+function rstMS(){['ms_K','ms_I'].forEach(f=>$(f).value='');$('ms_fields').querySelectorAll('input').forEach(i=>i.value='');$('ms_res').classList.remove('show');clrErr('ms_err');}
+
+function calcGravelius(){
+  clrErr('gr_err');
+  const A=parseFloat($('gr_A').value),P=parseFloat($('gr_P').value);
+  const Zmax=parseFloat($('gr_Zmax').value),Zmin=parseFloat($('gr_Zmin').value);
+  const L=parseFloat($('gr_L').value);
+  if([A,P,Zmax,Zmin,L].some(isNaN)||A<=0||P<=0||Zmax<=Zmin||L<=0){err('gr_err','Tous les champs sont requis (Zmax > Zmin).');return;}
+  const Kc=R(0.28*P/Math.sqrt(A),3);
+  const disc=1-(1.12/Kc)**2;
+  const Lr=R((Kc*Math.sqrt(A)/1.12)*(1+Math.sqrt(Math.max(0,disc))),2);
+  const lr=R(A/Lr,2),dZ=Zmax-Zmin,Ig=R(dZ/(Lr*1000)*1000,3),Dd=R(L/A,3);
+  $('gr_Kc').textContent=Kc;$('gr_Lr').textContent=Lr+' km';$('gr_lr').textContent=lr+' km';
+  $('gr_dZ').textContent=dZ+' m';$('gr_Ig').textContent=Ig+' m/km';$('gr_Dd').textContent=Dd+' km/km²';
+  let forme=Kc<1.25?'ramassé (quasi-circulaire)':Kc<1.5?'ovale-ramassé':Kc<1.75?'ovale-allongé':'très allongé';
+  let sensib=Kc<1.25?'très sensible aux crues rapides':Kc<1.5?'sensibilité modérée':Kc<1.75?'crues progressives':'crues lentes et étalées';
+  $('gr_interp').innerHTML=`Bassin <strong>${forme}</strong> (Kc=${Kc}) : ${sensib}. Dd=${Dd} km/km² (${Dd>2?'réseau dense':Dd>1?'modéré':'peu dense'}). Pente ${Ig>10?'forte':Ig>2?'modérée':'faible'} (${Ig} m/km).`;
+  showR('gr_res');
+}
+function rstGR(){['gr_A','gr_P','gr_Zmax','gr_Zmin','gr_L'].forEach(f=>$(f).value='');$('gr_res').classList.remove('show');clrErr('gr_err');}
+
+function wilsonHilferty(T,Cs){
+  const p=1-1/T,z=normINV(p);
+  if(Math.abs(Cs)<0.001)return z;
+  const k=2/Cs;
+  const t=z-(z**2-1)*Cs/6+(z**3-6*z)*(Cs**2)/54-(z**2-1)*(Cs**3)/162;
+  return t;
+}
+function calcPearson3(){
+  clrErr('p3_err');
+  const data=parseD($('p3_data').value);
+  if(data.length<5){err('p3_err','Minimum 5 valeurs.');return;}
+  const n=data.length,mean=data.reduce((a,b)=>a+b)/n;
+  const std=Math.sqrt(data.reduce((a,b)=>a+(b-mean)**2,0)/(n-1));
+  const cs=data.reduce((a,b)=>a+(b-mean)**3,0)/(n*std**3);
+  $('p3_mean').textContent=R(mean,3);$('p3_std').textContent=R(std,3);$('p3_cs').textContent=R(cs,3);
+  const periods=[2,5,10,20,50,100,200,1000];
+  const tbody=$('p3_tbody');tbody.innerHTML='';const qvals=[];
+  periods.forEach(T=>{
+    const KT=R(wilsonHilferty(T,cs),3),XT=R(mean+KT*std,2);
+    qvals.push({T,XT});
+    tbody.innerHTML+=`<tr><td>${T}</td><td>${KT}</td><td><strong>${XT}</strong></td></tr>`;
+  });
+  $('p3_interp').innerHTML=`Pearson III (Cs=${R(cs,3)}) : Q10=${qvals[2].XT}, Q100=${qvals[5].XT}, Q1000=${qvals[7].XT}.`;
+  showR('p3_res');
+  const sorted=[...data].sort((a,b)=>a-b);
+  const empX=sorted,empF=sorted.map((_,i)=>(i+1)/(n+1));
+  const theoX=Array.from({length:60},(_,i)=>Math.min(...data)+(Math.max(...data)-Math.min(...data))*i/59);
+  const theoF=theoX.map(x=>{const z=(x-mean)/std;return normCDF(z-cs*z*(z-1)/6);});
+  mkChart('chart_p3',{type:'line',data:{
+    datasets:[
+      {label:'F empirique (Weibull)',data:empX.map((x,i)=>({x,y:empF[i]})),borderColor:'#1565c0',pointRadius:5,showLine:false,backgroundColor:'#1565c0'},
+      {label:'Pearson III théorique',data:theoX.map((x,i)=>({x,y:theoF[i]})),borderColor:'#ef4444',pointRadius:0,tension:0.4}
+    ]},
+    options:{scales:{x:{type:'linear',title:{display:true,text:'X(T)'}},y:{title:{display:true,text:'Fréquence cumulée F'},min:0,max:1}},plugins:{legend:{position:'bottom'}}}});
+  showC('cw_p3');
+}
+function rstP3(){$('p3_data').value='';$('p3_res').classList.remove('show');$('cw_p3').classList.remove('show');clrErr('p3_err');}
+</script>
+</body>
+</html>
