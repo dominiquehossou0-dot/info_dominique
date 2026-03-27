@@ -19,8 +19,6 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;background:var(--g50);color:var(--g700);min-height:100vh}
-
-/* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97);
     backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,180,216,.2);
     display:flex;align-items:center;gap:1rem;padding:.75rem 1.5rem;flex-wrap:wrap}
@@ -35,7 +33,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
              padding:.3rem .65rem;border-radius:5px;transition:all .15s;white-space:nowrap}
 .nav-pills a:hover{background:rgba(0,180,216,.15);color:var(--cyan)}
 
-/* ── HERO ── */
 .hero{background:linear-gradient(135deg,var(--navy) 0%,#1a3a6e 60%,#0d3b6e 100%);
       padding:5.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;
@@ -54,19 +51,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .hero p{font-size:.92rem;color:rgba(255,255,255,.65);line-height:1.7}
 .hero-wave{position:absolute;bottom:-2px;left:0;width:100%;z-index:1}
 
-/* ── LAYOUT ── */
 .app{display:grid;grid-template-columns:300px 1fr;gap:0;min-height:calc(100vh - 160px);margin-top:0}
 .sidebar{background:var(--white);border-right:1px solid var(--g200);padding:1.5rem;
          position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
 .content{padding:1.5rem;overflow-x:hidden}
 
-/* ── SIDEBAR ── */
 .sb-section{margin-bottom:1.5rem}
 .sb-title{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
           color:var(--g500);margin-bottom:.8rem;padding-bottom:.4rem;
           border-bottom:1px solid var(--g200)}
 
-/* Upload zone */
 .upload-zone{border:2px dashed var(--g300);border-radius:12px;padding:1.5rem;
              text-align:center;cursor:pointer;transition:all .2s;background:var(--g50);
              position:relative}
@@ -76,20 +70,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .uz-text{font-size:.78rem;color:var(--g500);line-height:1.4}
 .uz-text strong{color:var(--blue);display:block;font-size:.85rem}
 
-/* Paste zone */
 .paste-area{width:100%;border:1.5px solid var(--g200);border-radius:8px;
             padding:.65rem .85rem;font-size:.78rem;font-family:'Courier New',monospace;
             color:var(--g900);background:var(--white);resize:vertical;min-height:90px;
             outline:none;transition:border-color .2s}
 .paste-area:focus{border-color:var(--blue)}
 
-/* Sélecteurs */
 .sb-select{width:100%;padding:.5rem .8rem;border:1.5px solid var(--g200);border-radius:7px;
            font-size:.8rem;font-family:inherit;color:var(--g900);background:var(--white);
            outline:none;cursor:pointer;transition:border-color .2s;margin-bottom:.5rem}
 .sb-select:focus{border-color:var(--blue)}
 
-/* Boutons sidebar */
 .sb-btn{width:100%;padding:.6rem;border:none;border-radius:8px;font-size:.82rem;
         font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;margin-bottom:.4rem}
 .sb-btn-primary{background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;
@@ -101,7 +92,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .sb-btn-outline{background:transparent;color:var(--g500);border:1px solid var(--g200)}
 .sb-btn-outline:hover{background:var(--g100);color:var(--g700)}
 
-/* Colonnes disponibles */
 .col-list{display:flex;flex-direction:column;gap:.3rem;max-height:160px;overflow-y:auto}
 .col-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;
           background:var(--g50);border:1px solid var(--g200);border-radius:6px;
@@ -110,12 +100,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .col-item.selected{background:var(--light);border-color:var(--blue);color:var(--blue);font-weight:600}
 .col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* Info fichier */
 .file-info{background:var(--light);border:1px solid rgba(21,101,192,.2);border-radius:8px;
            padding:.7rem .9rem;font-size:.75rem;color:var(--blue);margin-bottom:.8rem;display:none}
 .file-info.show{display:block}
 
-/* ── CONTENT PANELS ── */
 .panel{background:var(--white);border:1px solid var(--g200);border-radius:14px;
        margin-bottom:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,.05);overflow:hidden}
 .panel-header{display:flex;align-items:center;gap:.8rem;padding:1rem 1.3rem;
@@ -133,7 +121,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .panel-sub{font-size:.72rem;color:var(--g500);margin-top:.05rem}
 .panel-body{padding:1.2rem}
 
-/* Tableau de données */
 .data-table-wrap{overflow:auto;max-height:300px;border-radius:8px;border:1px solid var(--g200)}
 .data-table{width:100%;border-collapse:collapse;font-size:.75rem}
 .data-table th{position:sticky;top:0;background:var(--navy);color:#fff;
@@ -145,7 +132,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .data-table .missing{color:var(--red);font-weight:700;background:rgba(220,38,38,.08)}
 .data-table .outlier{color:var(--orange);font-weight:700;background:rgba(234,88,12,.08)}
 
-/* Stats grid */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
 .stat-box{background:var(--g50);border:1px solid var(--g200);border-radius:10px;
           padding:.9rem;text-align:center;transition:all .2s}
@@ -154,7 +140,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         color:var(--navy);line-height:1;display:block;margin-bottom:.2rem}
 .sb-lbl{font-size:.65rem;color:var(--g500);text-transform:uppercase;letter-spacing:.08em}
 
-/* Tests grid */
 .tests-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .test-result{background:var(--g50);border:1px solid var(--g200);border-radius:10px;padding:1rem}
 .tr-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem}
@@ -171,7 +156,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
            padding:.4rem .6rem;background:var(--white);border-radius:6px;
            border:1px solid var(--g200);line-height:1.5}
 
-/* Qualité données */
 .quality-bar{height:10px;background:var(--g100);border-radius:100px;overflow:hidden;margin:.4rem 0}
 .qb-fill{height:100%;border-radius:100px;transition:width .8s ease}
 .qb-good{background:linear-gradient(90deg,var(--green),#4ade80)}
@@ -180,10 +164,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .quality-row{display:flex;justify-content:space-between;align-items:center;
              font-size:.75rem;color:var(--g700);margin-bottom:.1rem}
 
-/* Charts */
 .chart-container{position:relative;height:280px;width:100%}
 
-/* Export row */
 .export-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}
 .exp-btn{display:flex;align-items:center;gap:.4rem;padding:.45rem .9rem;
          border:none;border-radius:7px;font-size:.75rem;font-weight:600;
@@ -195,19 +177,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .exp-png{background:rgba(21,101,192,.1);color:var(--blue);border:1px solid rgba(21,101,192,.25)}
 .exp-png:hover{background:rgba(21,101,192,.2)}
 
-/* Empty state */
 .empty-state{text-align:center;padding:3rem 2rem;color:var(--g500)}
 .es-icon{font-size:3rem;display:block;margin-bottom:1rem;opacity:.4}
 .es-text{font-size:.9rem;line-height:1.6}
 
-/* Notification */
 .notif{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;
        border-radius:10px;padding:.8rem 1.2rem;font-size:.8rem;z-index:999;
        transform:translateY(80px);opacity:0;transition:all .3s;
        border-left:4px solid var(--cyan);box-shadow:0 8px 24px rgba(0,0,0,.2)}
 .notif.show{transform:translateY(0);opacity:1}
 
-/* Interprétation auto */
 .auto-interp{background:linear-gradient(135deg,rgba(21,101,192,.05),rgba(0,180,216,.05));
              border:1px solid rgba(21,101,192,.15);border-radius:10px;
              padding:1rem 1.2rem;font-size:.8rem;color:var(--g700);line-height:1.7;
@@ -215,7 +194,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 .ai-title{font-weight:700;color:var(--navy);font-size:.82rem;margin-bottom:.4rem;
           display:flex;align-items:center;gap:.4rem}
 
-/* BTT */
 #btt{position:fixed;bottom:1.8rem;right:1.8rem;width:40px;height:40px;border-radius:50%;
      background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;border:none;
      cursor:pointer;font-size:1rem;font-weight:700;display:flex;align-items:center;
@@ -223,7 +201,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
      transition:opacity .3s,transform .3s;z-index:998}
 #btt.visible{opacity:1;transform:translateY(0)}
 
-/* Responsive */
 @media(max-width:900px){
   .app{grid-template-columns:1fr}
   .sidebar{position:static;height:auto}
@@ -235,7 +212,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="index.html" class="nav-back">← Hydrologie</a>
   <div class="nav-brand">Analyse<span>Hydro</span></div>
@@ -252,7 +228,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
   <a href="BiblioHydro.html" style="color:rgba(255,255,255,.6);font-size:.72rem;font-weight:600;text-decoration:none;border:1px solid rgba(255,255,255,.2);padding:.28rem .65rem;border-radius:5px;white-space:nowrap">📚 Biblio</a>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-badge">📊 Analyse de données · INE–UAC · </div>
@@ -264,13 +239,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
   </svg>
 </div>
 
-<!-- APP -->
 <div class="app">
 
-  <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
 
-    <!-- Import fichier -->
     <div class="sb-section" id="import">
       <div class="sb-title">📂 Importer des données</div>
       <div class="upload-zone" id="uploadZone">
@@ -297,16 +269,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
       <button class="sb-btn sb-btn-outline" onclick="loadDemo()">🎯 Charger données démo</button>
     </div>
 
-    <!-- Info fichier -->
     <div class="file-info" id="fileInfo"></div>
 
-    <!-- Colonnes -->
     <div class="sb-section" id="col-section" style="display:none">
       <div class="sb-title">📋 Colonnes disponibles</div>
       <div class="col-list" id="colList"></div>
     </div>
 
-    <!-- Config analyse -->
     <div class="sb-section" id="cfg-section" style="display:none">
       <div class="sb-title">⚙️ Colonne à analyser</div>
       <select class="sb-select" id="colSelect" onchange="runAnalysis()"></select>
@@ -323,7 +292,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
       </label>
     </div>
 
-    <!-- Actions -->
     <div class="sb-section" id="act-section" style="display:none">
       <div class="sb-title">💾 Exporter</div>
       <button class="sb-btn sb-btn-success" onclick="exportCSV()">📥 Exporter CSV</button>
@@ -333,10 +301,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
 
   </aside>
 
-  <!-- ── CONTENT ── -->
   <main class="content">
 
-    <!-- Écran d'accueil -->
     <div id="emptyState">
       <div class="panel">
         <div class="panel-body">
@@ -353,10 +319,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
       </div>
     </div>
 
-    <!-- Résultats (cachés au départ) -->
     <div id="results" style="display:none">
 
-      <!-- Aperçu données -->
       <div class="panel" id="apercu">
         <div class="panel-header">
           <div class="ph-icon phi1">📋</div>
@@ -366,7 +330,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
           </div>
         </div>
         <div class="panel-body">
-          <!-- Qualité -->
+
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
             <div>
               <div class="quality-row"><span>Complétude</span><span id="q_complet">—</span></div>
@@ -385,7 +349,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-      <!-- Statistiques descriptives -->
       <div class="panel" id="stats">
         <div class="panel-header">
           <div class="ph-icon phi2">📐</div>
@@ -398,7 +361,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-      <!-- Graphiques -->
       <div class="panel" id="graphiques">
         <div class="panel-header">
           <div class="ph-icon phi3">📈</div>
@@ -430,7 +392,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-      <!-- Tests statistiques -->
       <div class="panel" id="tests">
         <div class="panel-header">
           <div class="ph-icon phi4">🔬</div>
@@ -441,7 +402,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-      <!-- Tendance & rupture -->
       <div class="panel" id="tendance">
         <div class="panel-header">
           <div class="ph-icon phi5">📉</div>
@@ -454,7 +414,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-      <!-- Débits classés -->
       <div class="panel" id="debits">
         <div class="panel-header">
           <div class="ph-icon phi6">🌊</div>
@@ -475,7 +434,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-      <!-- Fréquences Gumbel -->
       <div class="panel" id="freq">
         <div class="panel-header">
           <div class="ph-icon phi7">🔄</div>
@@ -491,7 +449,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,31,60,.97
         </div>
       </div>
 
-    </div><!-- /results -->
+    </div>
   </main>
 </div>
 
@@ -522,13 +480,9 @@ const R = (v,d=2) => isNaN(v)?'—':Math.round(v*10**d)/10**d;
 
 window.addEventListener('scroll',()=>$('btt').classList.toggle('visible',window.scrollY>200));
 
-// ── Fond blanc Chart.js ──
 const whiteBg = {id:'whiteBg',beforeDraw(c){const ctx=c.ctx;ctx.save();ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.restore()}};
 Chart.register(whiteBg);
 
-// ═══════════════════════════════════════════════
-// IMPORT DONNÉES
-// ═══════════════════════════════════════════════
 function loadFile(input) {
   const file = input.files[0];
   if(!file) return;
@@ -574,7 +528,6 @@ function parseCSV(text) {
 }
 
 function loadDemo() {
-  // Données démo : pluies annuelles station fictive Bénin 1990-2022
   const years=[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022];
   const pluies=[1082,956,1134,1045,1201,978,1056,1189,932,1078,1156,1023,1098,945,1167,1034,1089,1143,967,1112,1078,1034,1189,1056,1023,1098,1167,945,1112,1023,1189,1067,1145];
   const debits=[45.2,38.1,52.4,41.3,58.7,36.9,47.2,55.1,33.8,44.6,53.2,40.1,48.7,35.2,54.3,41.8,46.5,51.9,37.4,49.3,47.8,40.9,55.8,43.2,39.5,46.1,52.7,34.9,50.4,39.8,56.2,44.7,51.3];
@@ -589,18 +542,15 @@ function processData(rows) {
   STATE.rawData = rows;
   STATE.headers = Object.keys(rows[0]);
 
-  // Info fichier
   const fi = $('fileInfo');
   fi.innerHTML = `📂 <strong>${STATE.fileName||'Données saisies'}</strong> · ${rows.length} lignes · ${STATE.headers.length} colonnes`;
   fi.classList.add('show');
 
-  // Colonnes
   buildColList();
   $('col-section').style.display='block';
   $('cfg-section').style.display='block';
   $('act-section').style.display='block';
 
-  // Sélectionner la première colonne numérique
   const numCols = STATE.headers.filter(h=>rows.some(r=>!isNaN(parseFloat(r[h]))));
   const dateCols = STATE.headers.filter(h=>h.toLowerCase().includes('ann')||h.toLowerCase().includes('date')||h.toLowerCase().includes('year'));
 
@@ -632,16 +582,13 @@ function buildSelects(numCols, dateCols) {
   if(dateCols.length){ ds.value=dateCols[0]; }
 }
 
-// ═══════════════════════════════════════════════
-// ANALYSE PRINCIPALE
-// ═══════════════════════════════════════════════
 function runAnalysis() {
   const col = $('colSelect').value;
   const dcol = $('dateSelect').value;
   if(!col||!STATE.rawData.length) return;
 
   STATE.colName = col;
-  // Extraire valeurs numériques
+
   let raw = STATE.rawData.map(r=>parseFloat(r[col]));
   const missing = raw.filter(isNaN).length;
   const chkFill = $('chkFill').checked;
@@ -653,7 +600,6 @@ function runAnalysis() {
   STATE.colData = raw.filter(v=>!isNaN(v));
   STATE.dateData = dcol ? STATE.rawData.map(r=>r[dcol]) : STATE.rawData.map((_,i)=>i+1);
 
-  // Mettre à jour la sélection visuelle
   document.querySelectorAll('.col-item').forEach(el=>{
     el.classList.toggle('selected', el.dataset.col===col);
   });
@@ -667,9 +613,6 @@ function runAnalysis() {
   buildGumbel();
 }
 
-// ═══════════════════════════════════════════════
-// APERÇU
-// ═══════════════════════════════════════════════
 function buildApercu(missing, total) {
   const d = STATE.colData;
   const pct_complet = R((total-missing)/total*100,1);
@@ -688,7 +631,6 @@ function buildApercu(missing, total) {
   $('qb_valid').style.width=pct_valid+'%';
   $('dataSubTitle').textContent=`${STATE.fileName||'Données'} · Colonne : ${STATE.colName} · ${d.length} observations`;
 
-  // Tableau
   const tbl = $('dataTable');
   const displayHeaders = STATE.headers.slice(0,6);
   let html = '<tr>'+displayHeaders.map(h=>`<th>${h}</th>`).join('')+(STATE.headers.length>6?`<th>+${STATE.headers.length-6} cols</th>`:'')+'</tr>';
@@ -704,9 +646,6 @@ function buildApercu(missing, total) {
   tbl.innerHTML=html;
 }
 
-// ═══════════════════════════════════════════════
-// STATISTIQUES
-// ═══════════════════════════════════════════════
 function buildStats() {
   const d = [...STATE.colData].sort((a,b)=>a-b);
   const n=d.length, mean=d.reduce((a,b)=>a+b)/n;
@@ -739,7 +678,6 @@ function buildStats() {
       <span class="sb-lbl">${it.lbl}</span>
     </div>`).join('');
 
-  // Interprétation
   let interp=`<div class="ai-title">🤖 Interprétation automatique</div>`;
   interp+=`La série <strong>${STATE.colName}</strong> (n=${n}) présente une moyenne de <strong>${R(mean,2)}</strong> et un coefficient de variation de <strong>${cv}%</strong> — `;
   if(parseFloat(cv)<15) interp+='série <strong>très homogène</strong>, faible variabilité interannuelle.';
@@ -755,9 +693,6 @@ function buildStats() {
   return {n,mean,std,cv,med,cs,ck,q1,q3,min:d[0],max:d[n-1]};
 }
 
-// ═══════════════════════════════════════════════
-// GRAPHIQUES
-// ═══════════════════════════════════════════════
 const chartInst = {};
 function mkC(id, cfg) {
   if(chartInst[id]){chartInst[id].destroy();}
@@ -774,7 +709,6 @@ function buildCharts() {
   const mean=d.reduce((a,b)=>a+b)/d.length;
   const std=Math.sqrt(d.reduce((a,b)=>a+(b-mean)**2,0)/(d.length-1));
 
-  // 1) Série temporelle
   const colors=d.map(v=>Math.abs(v-mean)>2*std?'rgba(220,38,38,.8)':v>mean?'rgba(21,101,192,.7)':'rgba(100,116,139,.5)');
   mkC('chartSerie',{type:'bar',data:{
     labels:dates,
@@ -785,11 +719,10 @@ function buildCharts() {
     options:{plugins:{legend:{position:'bottom'}},scales:{x:{ticks:{maxRotation:45,font:{size:10}}},y:{title:{display:true,text:STATE.colName}}}}
   });
 
-  // 2) Histogramme
   const mn=Math.min(...d),mx=Math.max(...d),nb=Math.max(7,Math.ceil(Math.sqrt(d.length)));
   const bw=(mx-mn)/nb; const counts=Array(nb).fill(0);
   d.forEach(v=>{const b=Math.min(Math.floor((v-mn)/bw),nb-1);counts[b]++;});
-  // Courbe normale théorique
+
   const normY=counts.map((_,i)=>{
     const x=mn+(i+0.5)*bw;
     return R(d.length*bw*(1/(std*Math.sqrt(2*Math.PI)))*Math.exp(-0.5*((x-mean)/std)**2),2);
@@ -803,7 +736,6 @@ function buildCharts() {
     options:{plugins:{legend:{position:'bottom'}},scales:{x:{title:{display:true,text:'Valeur'}},y:{title:{display:true,text:'Effectif'}}}}
   });
 
-  // 3) CDF empirique
   const sorted=[...d].sort((a,b)=>a-b);
   const empF=sorted.map((_,i)=>(i+1)/(d.length+1));
   mkC('chartCDF',{type:'line',data:{
@@ -813,7 +745,6 @@ function buildCharts() {
     options:{scales:{x:{type:'linear',title:{display:true,text:STATE.colName}},y:{title:{display:true,text:'F(x)'},min:0,max:1}},plugins:{legend:{display:false}}}
   });
 
-  // 4) Box plot approximé
   const q1=sorted[Math.floor(d.length*0.25)],q3=sorted[Math.floor(d.length*0.75)];
   const iqr=q3-q1,wl=q1-1.5*iqr,wh=q3+1.5*iqr;
   const whiskerL=Math.max(Math.min(...d),wl),whiskerH=Math.min(Math.max(...d),wh);
@@ -835,9 +766,6 @@ function buildCharts() {
   });
 }
 
-// ═══════════════════════════════════════════════
-// TESTS STATISTIQUES
-// ═══════════════════════════════════════════════
 function normCDF(z){
   const a=[0.254829592,-0.284496736,1.421413741,-1.453152027,1.061405429],p=0.3275911;
   const s=z<0?-1:1; z=Math.abs(z)/Math.sqrt(2);
@@ -854,7 +782,6 @@ function buildTests() {
 
   const tests=[];
 
-  // 1) Test de Kolmogorov-Smirnov (normalité)
   let Dn=0;
   sorted.forEach((x,i)=>{
     const Fe=(i+1)/n, Ft=normCDF((x-mean)/std);
@@ -866,7 +793,6 @@ function buildTests() {
     interp:Dn<Dcrit_ks?`✅ La loi normale est <strong>acceptable</strong> (Dn=${R(Dn,4)} < ${R(Dcrit_ks,4)}).`:`⚠️ La loi normale est <strong>rejetée</strong> (Dn=${R(Dn,4)} > ${R(Dcrit_ks,4)}). Essayer Gumbel ou Log-Normale.`
   });
 
-  // 2) Test de Mann-Kendall (tendance)
   let S=0;
   for(let i=0;i<n-1;i++) for(let j=i+1;j<n;j++) S+=Math.sign(d[j]-d[i]);
   const varS=n*(n-1)*(2*n+5)/18;
@@ -877,7 +803,6 @@ function buildTests() {
     interp:pMK<0.05?`📈 Tendance <strong>${S>0?'croissante':'décroissante'} significative</strong> (Z=${R(Zmk,3)}, p=${R(pMK,4)} < 0.05).`:`➡️ <strong>Pas de tendance significative</strong> détectée (p=${R(pMK,4)} > 0.05).`
   });
 
-  // 3) Test de Pettitt (rupture)
   const Uk=[];
   for(let t=1;t<n;t++){
     let sum=0;
@@ -891,7 +816,6 @@ function buildTests() {
     interp:pPet<0.05?`🔴 Rupture <strong>significative</strong> détectée à l'observation <strong>${maxU.t}</strong> (K=${maxU.U}, p=${R(pPet,4)} < 0.05).`:`✅ <strong>Pas de rupture significative</strong> (p=${R(pPet,4)} > 0.05). Série homogène.`
   });
 
-  // 4) Test de Grubbs (valeurs aberrantes)
   const maxDev=Math.max(...d.map(v=>Math.abs(v-mean)));
   const G=R(maxDev/std,3);
   const Gcrit=R(2.557+0.028*n,3); // approx n=10-50
@@ -900,7 +824,6 @@ function buildTests() {
     interp:G>parseFloat(Gcrit)?`⚠️ <strong>Valeur aberrante détectée</strong> (G=${G} > Gcrit=${Gcrit}). Vérifier la valeur extrême.`:`✅ <strong>Pas de valeur aberrante</strong> significative (G=${G} < Gcrit=${Gcrit}).`
   });
 
-  // Rendu
   $('testsGrid').innerHTML = tests.map(t=>`
     <div class="test-result">
       <div class="tr-header">
@@ -918,9 +841,6 @@ function buildTests() {
     </div>`).join('');
 }
 
-// ═══════════════════════════════════════════════
-// TENDANCE
-// ═══════════════════════════════════════════════
 function buildTendance() {
   const d=STATE.colData, n=d.length;
   const X=Array.from({length:n},(_,i)=>i+1);
@@ -929,7 +849,6 @@ function buildTendance() {
   const b=my-a*mx;
   const r2=R(1-(d.reduce((s,v,i)=>s+(v-(a*X[i]+b))**2,0))/(d.reduce((s,v)=>s+(v-my)**2,0)),4);
 
-  // Mann-Kendall S
   let S=0;
   for(let i=0;i<n-1;i++) for(let j=i+1;j<n;j++) S+=Math.sign(d[j]-d[i]);
   const varS=n*(n-1)*(2*n+5)/18;
@@ -953,9 +872,6 @@ function buildTendance() {
   $('tendanceInterp').innerHTML=interp;
 }
 
-// ═══════════════════════════════════════════════
-// DÉBITS CLASSÉS
-// ═══════════════════════════════════════════════
 function buildDebits() {
   const d=[...STATE.colData].sort((a,b)=>b-a);
   const n=d.length;
@@ -993,9 +909,6 @@ function buildDebits() {
   $('debitsInterp').innerHTML=interp;
 }
 
-// ═══════════════════════════════════════════════
-// GUMBEL
-// ═══════════════════════════════════════════════
 function buildGumbel() {
   const d=STATE.colData, n=d.length;
   const mean=d.reduce((a,b)=>a+b)/n;
@@ -1035,9 +948,6 @@ function buildGumbel() {
   $('gumbelInterp').innerHTML=`<div class="ai-title">🔄 Analyse fréquentielle Gumbel</div>Paramètres : u=${R(u,2)}, α=${R(alpha,2)}. Crue décennale X(10)=<strong>${qts[2].X}</strong>, centennale X(100)=<strong>${qts[5].X}</strong>. Ces valeurs servent au dimensionnement des ouvrages hydrauliques.`;
 }
 
-// ═══════════════════════════════════════════════
-// EXPORTS
-// ═══════════════════════════════════════════════
 function exportCSV() {
   if(!STATE.rawData.length){notify('⚠️ Aucune donnée.');return;}
   const h=STATE.headers.join(',');
@@ -1090,7 +1000,6 @@ function exportPDF() {
   doc.text(safe('Colonne analysee : ')+STATE.colName+' · n='+n+' observations · '+new Date().toLocaleDateString('fr-FR'),15,y);y+=4;
   doc.setDrawColor(21,101,192);doc.setLineWidth(0.5);doc.line(15,y,195,y);y+=8;
 
-  // Stats
   doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(10,31,60);
   doc.text('1. Statistiques descriptives',15,y);y+=7;
   const stats=[['n',n],['Moyenne',mean],safe(['Mediane',R(med,2)]),['Ecart-type',std],['Cv (%)',cv],['Min',R(sorted[0],2)],['Max',R(sorted[n-1],2)]];
@@ -1102,7 +1011,6 @@ function exportPDF() {
   });
   y+=5;
 
-  // Gumbel
   const alpha_=parseFloat(std)*Math.sqrt(6)/Math.PI, u_=parseFloat(mean)-0.5772*alpha_;
   doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(10,31,60);
   doc.text(safe('2. Analyse frequentielle (Gumbel)'),15,y);y+=7;
@@ -1118,7 +1026,6 @@ function exportPDF() {
   });
   y+=5;
 
-  // Interprétation
   doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(10,31,60);
   doc.text(safe('3. Interpretation automatique'),15,y);y+=7;
   doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(100,116,139);
@@ -1147,7 +1054,6 @@ function resetAll() {
   notify('🗑️ Données effacées');
 }
 
-// Drag & Drop
 const uz=$('uploadZone');
 uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
 uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
